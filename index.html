@@ -802,32 +802,162 @@ footer{
 .rv-l{opacity:0;transform:translateX(-24px);transition:opacity .65s ease,transform .65s ease}
 .rv-l.on{opacity:1;transform:translateX(0)}
 
-/* ─── RESPONSIVE ─── */
+/* ─── HAMBURGER BUTTON ─── */
+.nav-hamburger{
+  display:none;
+  flex-direction:column;justify-content:center;gap:5px;
+  width:40px;height:40px;background:none;border:none;
+  cursor:pointer;padding:4px;z-index:700;
+}
+.nav-hamburger span{
+  display:block;width:24px;height:2px;
+  background:var(--white);border-radius:2px;
+  transition:transform .3s ease,opacity .3s ease,width .3s ease;
+  transform-origin:center;
+}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;width:0}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ─── MOBILE MENU OVERLAY ─── */
+.mobile-menu{
+  position:fixed;inset:0;z-index:650;
+  background:rgba(9,9,9,.98);
+  backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease;
+}
+.mobile-menu.open{opacity:1;pointer-events:all}
+.mobile-menu a{
+  font-size:clamp(32px,8vw,52px);font-weight:700;
+  letter-spacing:-.025em;color:var(--white);
+  padding:16px 0;border-bottom:1px solid var(--line);
+  width:80%;text-align:center;
+  transition:color .2s;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .3s ease,transform .3s ease,color .2s;
+}
+.mobile-menu.open a{opacity:1;transform:translateY(0)}
+.mobile-menu.open a:nth-child(1){transition-delay:.05s}
+.mobile-menu.open a:nth-child(2){transition-delay:.1s}
+.mobile-menu.open a:nth-child(3){transition-delay:.15s}
+.mobile-menu.open a:nth-child(4){transition-delay:.2s}
+.mobile-menu.open a:nth-child(5){transition-delay:.25s}
+.mobile-menu a:hover{color:var(--g)}
+.mobile-menu a:last-child{
+  margin-top:32px;border:none;border-bottom:none;
+  background:var(--g);color:#000;
+  padding:16px 40px;border-radius:8px;
+  font-size:18px;width:auto;
+  font-weight:600;
+}
+.mobile-menu a:last-child:hover{opacity:.88;color:#000}
+
+/* ─── RESPONSIVE 1024px ─── */
 @media(max-width:1024px){
-  #sobre .inner,.fundador-inner,.pq-header{grid-template-columns:1fr;gap:56px}
-  .serv-grid,.pq-grid{grid-template-columns:1fr}
+  /* nav */
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-hamburger{display:flex}
+
+  /* hero */
+  #hero{padding:80px 24px 60px;min-height:100svh}
+  .hero-left{max-width:100%}
+  .hero-eyebrow{font-size:11px}
+
+  /* sections */
+  .section,.section-alt{padding:80px 24px}
+  #stats,#cta,footer{padding-left:24px;padding-right:24px}
+
+  /* sobre */
+  #sobre .inner{grid-template-columns:1fr;gap:48px}
+
+  /* serviços */
+  .serv-grid{grid-template-columns:1fr}
+  .serv-header{flex-direction:column;align-items:flex-start;gap:16px}
+  .serv-header p.section-sub{text-align:left;max-width:100%;margin-top:0}
+
+  /* portfolio */
   .port-grid{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr 1fr;gap:40px}
+  .port-header{flex-direction:column;gap:16px;align-items:flex-start}
+  .port-item{aspect-ratio:3/2}
+
+  /* porque */
+  .pq-header{grid-template-columns:1fr;gap:24px;margin-bottom:40px}
+  .pq-grid{grid-template-columns:repeat(2,1fr)}
+
+  /* stats */
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .stat:nth-child(2){border-right:none}
   .stat:nth-child(3){border-right:1px solid var(--line)}
   .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}
-  .serv-header{flex-direction:column;align-items:flex-start}
-  .serv-header p.section-sub{text-align:left;max-width:100%}
-  .port-header{flex-direction:column;gap:16px;align-items:flex-start}
-  nav{padding:0 24px}
-  .nav-links{display:none}
-  .section,.section-alt{padding:80px 24px}
-  #hero{padding-left:24px;padding-right:24px}
-  #stats,#cta,footer{padding-left:24px;padding-right:24px}
-}
-@media(max-width:600px){
-  .pq-grid{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr}
+
+  /* fundador */
+  #fundador .inner{grid-template-columns:1fr;gap:48px}
+  .f-img{aspect-ratio:1/1;min-height:unset}
   .f-badge{right:8px}
-  .f-stats{grid-template-columns:repeat(2,1fr)}
-  .fundador-inner{gap:40px}
-  #fundador .inner{grid-template-columns:1fr}
+
+  /* footer */
+  .foot-grid{grid-template-columns:1fr 1fr;gap:40px}
+}
+
+/* ─── RESPONSIVE 600px ─── */
+@media(max-width:600px){
+  /* hero */
+  #hero{padding:72px 20px 56px}
+  .hero-left h1{font-size:clamp(44px,11vw,64px);line-height:.95}
+  .hero-left p{font-size:17px}
+  .hero-btns{flex-direction:column;width:100%}
+  .btn-primary,.btn-ghost{width:100%;justify-content:center;text-align:center}
+
+  /* sections */
+  .section,.section-alt{padding:64px 20px}
+  #stats,#cta,footer{padding-left:20px;padding-right:20px}
+
+  /* section title */
+  h2.section-title{font-size:clamp(28px,8vw,44px)}
+
+  /* stats */
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stat{padding:28px 20px}
+  .stat-n{font-size:clamp(32px,9vw,48px)}
+
+  /* serv cards */
+  .serv-card{padding:32px 24px}
+
+  /* porque */
+  .pq-grid{grid-template-columns:1fr}
+
+  /* processo */
+  .step-row{grid-template-columns:40px 1fr;gap:20px;padding:28px 0}
+
+  /* fundador */
+  .f-img{aspect-ratio:4/5}
+  .f-stats{grid-template-columns:repeat(3,1fr)}
+  .f-stats .f-stat{padding:16px 12px}
+  .f-stats .fn{font-size:22px}
+
+  /* depo */
+  .d-card{width:280px;padding:24px}
+
+  /* faq */
+  .faq-btn{font-size:15px}
+
+  /* cta */
+  #cta h2{font-size:clamp(32px,9vw,52px)}
+  #cta .hero-btns{flex-direction:column;width:100%;max-width:320px;margin-left:auto;margin-right:auto}
+  #cta .btn-primary,#cta .btn-ghost{width:100%;justify-content:center}
+
+  /* footer */
+  .foot-grid{grid-template-columns:1fr;gap:32px}
+  .foot-bottom{flex-direction:column;gap:8px;text-align:center}
+
+  /* nav mobile */
+  nav{padding:0 20px}
+  .nav-logo{font-size:14px}
 }
 </style>
 </head>
@@ -845,7 +975,19 @@ footer{
     <a href="#faq">FAQ</a>
   </div>
   <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="nav-cta">Falar no WhatsApp</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+  <a href="#servicos">Serviços</a>
+  <a href="#portfolio">Portfólio</a>
+  <a href="#sobre">Sobre</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento.">Falar no WhatsApp →</a>
+</div>
 
 <!-- HERO -->
 <section id="hero" role="banner" aria-label="Apresentação">
@@ -1382,6 +1524,32 @@ footer{
 window.addEventListener('scroll',()=>{
   document.getElementById('nav').classList.toggle('stuck',scrollY>48);
 },{ passive:true });
+
+/* ══ HAMBURGER MENU ══ */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+
+function toggleMenu(open){
+  hamburger.classList.toggle('open', open);
+  mobileMenu.classList.toggle('open', open);
+  hamburger.setAttribute('aria-expanded', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.contains('open');
+  toggleMenu(!isOpen);
+});
+
+// Close on link click
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => toggleMenu(false));
+});
+
+// Close on ESC
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') toggleMenu(false);
+});
 
 /* parallax removed — caused text overlap */
 

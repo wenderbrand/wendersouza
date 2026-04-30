@@ -311,7 +311,54 @@ nav.peek{
 }
 .nav-cta:hover{box-shadow:0 0 24px rgba(19,246,117,.45);transform:scale(1.03)}
 
-/* ─── HERO ─── */
+/* ─── LANG SWITCHER ─── */
+.lang-switcher{
+  position:relative;display:flex;align-items:center;flex-shrink:0;
+}
+.lang-btn{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;padding:5px 12px;cursor:pointer;
+  font-family:var(--font);font-size:12px;font-weight:600;
+  color:var(--light);letter-spacing:.04em;text-transform:uppercase;
+  transition:background .2s,border-color .2s;
+}
+.lang-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.lang-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;
+  transition:transform .25s ease}
+.lang-switcher.open .lang-btn svg{transform:rotate(180deg)}
+.lang-flag{font-size:14px;line-height:1}
+.lang-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:rgba(14,14,14,.96);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;
+  padding:6px;min-width:160px;
+  opacity:0;pointer-events:none;transform:translateY(-6px) scale(.97);
+  transform-origin:top right;
+  transition:opacity .2s ease,transform .2s ease;
+  z-index:10;
+}
+.lang-switcher.open .lang-dropdown{
+  opacity:1;pointer-events:all;transform:translateY(0) scale(1);
+}
+.lang-option{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;cursor:pointer;
+  font-family:var(--font);font-size:13px;font-weight:500;
+  color:var(--body);transition:background .15s,color .15s;
+  white-space:nowrap;
+}
+.lang-option:hover{background:rgba(255,255,255,.07);color:var(--white)}
+.lang-option.active{color:var(--g)}
+.lang-option .flag{font-size:16px;line-height:1;flex-shrink:0}
+.lang-option .lname{flex:1}
+.lang-option .check{
+  width:16px;height:16px;border-radius:50%;
+  background:var(--g);display:none;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.lang-option.active .check{display:flex}
+.lang-option .check::after{content:'✓';font-size:10px;color:#000;font-weight:800}
 #hero{
   min-height:100vh;
   display:flex;
@@ -352,16 +399,18 @@ nav.peek{
 .hero-right{display:none}
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:10px;
-  font-size:13px;font-weight:500;letter-spacing:.06em;
+  font-size:12px;font-weight:500;letter-spacing:.06em;
   text-transform:uppercase;color:var(--body);
-  margin-bottom:36px;
+  margin-bottom:36px;white-space:nowrap;
+  flex-wrap:nowrap;
 }
-.hero-eyebrow span{
+.hero-eyebrow span:first-child{
   width:6px;height:6px;border-radius:50%;
   background:var(--g);flex-shrink:0;
   box-shadow:0 0 8px var(--g);
   animation:blink 2.4s ease-in-out infinite;
 }
+.hero-eyebrow span[data-i18n]{white-space:nowrap}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .hero-left h1{
   font-size:clamp(64px,9vw,128px);
@@ -1000,14 +1049,26 @@ html{scroll-behavior:smooth}
 .mobile-menu.open a:nth-child(4){transition-delay:.2s}
 .mobile-menu.open a:nth-child(5){transition-delay:.25s}
 .mobile-menu a:hover{color:var(--g)}
-.mobile-menu a:last-child{
+.mobile-menu a:nth-last-of-type(1){
   margin-top:32px;border:none;border-bottom:none;
   background:var(--g);color:#000;
   padding:16px 40px;border-radius:8px;
   font-size:18px;width:auto;
   font-weight:600;
 }
-.mobile-menu a:last-child:hover{opacity:.88;color:#000}
+.mobile-lang{
+  display:flex;gap:8px;margin-top:32px;
+}
+.mobile-lang-btn{
+  font-family:var(--font);font-size:13px;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;padding:8px 16px;cursor:pointer;
+  color:var(--light);letter-spacing:.03em;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.mobile-lang-btn:hover,.mobile-lang-btn.active{
+  background:rgba(19,246,117,.12);border-color:rgba(19,246,117,.3);color:var(--g);
+}
 
 /* ─── RESPONSIVE 1024px ─── */
 @media(max-width:1024px){
@@ -1025,12 +1086,13 @@ html{scroll-behavior:smooth}
   }
   .nav-links{display:none}
   .nav-cta{display:none}
+  .lang-switcher{display:none}
   .nav-hamburger{display:flex}
 
   /* hero */
   #hero{padding:80px 24px 60px;min-height:100svh}
   .hero-left{max-width:100%}
-  .hero-eyebrow{font-size:11px}
+  .hero-eyebrow{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 48px)}
 
   /* sections */
   .section,.section-alt{padding:80px 24px}
@@ -1073,7 +1135,7 @@ html{scroll-behavior:smooth}
   /* hero */
   #hero{padding:72px 20px 56px}
   .hero-left h1{font-size:clamp(44px,11vw,64px);line-height:.95}
-  .hero-left p{font-size:17px}
+  .hero-left p{font-size:16px;max-width:100%}
   .hero-btns{flex-direction:column;width:100%}
   .btn-primary,.btn-ghost{width:100%;justify-content:center;text-align:center}
 
@@ -1142,12 +1204,39 @@ html{scroll-behavior:smooth}
 <nav id="nav" role="navigation" aria-label="Menu principal">
   <a href="#" class="nav-logo">Wender Souza<em>.</em></a>
   <div class="nav-links">
-    <a href="#servicos">Serviços</a>
-    <a href="#portfolio">Portfólio</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#faq">FAQ</a>
+    <a href="#servicos" data-i18n="nav_servicos">Serviços</a>
+    <a href="#portfolio" data-i18n="nav_portfolio">Portfólio</a>
+    <a href="#sobre" data-i18n="nav_sobre">Sobre</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
   </div>
-  <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="nav-cta">Falar no WhatsApp</a>
+  <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="nav-cta" data-i18n="nav_cta">Falar no WhatsApp</a>
+
+  <!-- Language Switcher -->
+  <div class="lang-switcher" id="langSwitcher">
+    <button class="lang-btn" id="langBtn" aria-label="Selecionar idioma">
+      <span class="lang-flag" id="currentFlag">🇧🇷</span>
+      <span id="currentLang">PT-BR</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <div class="lang-option active" data-lang="pt-br">
+        <span class="flag">🇧🇷</span>
+        <span class="lname">Português (BR)</span>
+        <span class="check"></span>
+      </div>
+      <div class="lang-option" data-lang="pt-pt">
+        <span class="flag">🇵🇹</span>
+        <span class="lname">Português (PT)</span>
+        <span class="check"></span>
+      </div>
+      <div class="lang-option" data-lang="en">
+        <span class="flag">🇺🇸</span>
+        <span class="lname">English</span>
+        <span class="check"></span>
+      </div>
+    </div>
+  </div>
+
   <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -1163,22 +1252,23 @@ html{scroll-behavior:smooth}
   <a href="#sobre">Sobre</a>
   <a href="#faq">FAQ</a>
   <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento.">Falar no WhatsApp →</a>
+  <div class="mobile-lang">
+    <button class="mobile-lang-btn" data-lang="pt-br">🇧🇷 PT-BR</button>
+    <button class="mobile-lang-btn" data-lang="pt-pt">🇵🇹 PT-PT</button>
+    <button class="mobile-lang-btn" data-lang="en">🇺🇸 EN</button>
+  </div>
 </div>
 
 <!-- HERO -->
 <section id="hero" role="banner" aria-label="Apresentação">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-left">
-    <div class="hero-eyebrow"><span></span>Wender Souza — Brand Designer &amp; Art Director</div>
-    <h1>
-      Design que<br>
-      <em>constrói</em> marcas<br>
-      que ficam.
-    </h1>
-    <p>Identidade visual, conteúdo e sites pensados para posicionar sua marca com clareza — e fazer ela trabalhar por você todos os dias.</p>
+    <div class="hero-eyebrow"><span></span><span data-i18n="hero_eyebrow">Brand Designer &amp; Art Director</span></div>
+    <h1 data-i18n="hero_h1">Design que<br><em>constrói</em> marcas<br>que ficam.</h1>
+    <p data-i18n="hero_p">Identidade visual, conteúdo e sites pensados para posicionar sua marca com clareza — e fazer ela trabalhar por você todos os dias.</p>
     <div class="hero-btns">
-      <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary">Iniciar projeto →</a>
-      <a href="#portfolio" class="btn-ghost">Ver portfólio</a>
+      <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary" data-i18n="hero_btn1">Iniciar projeto →</a>
+      <a href="#portfolio" class="btn-ghost" data-i18n="hero_btn2">Ver portfólio</a>
     </div>
   </div>
 </section>
@@ -1186,30 +1276,30 @@ html{scroll-behavior:smooth}
 <!-- MARQUEE -->
 <div class="marquee-wrap">
   <div class="marquee-inner">
-    <div class="m-item">Wender Souza · Brand Design<span class="m-dot"></span></div>
     <div class="m-item">Wender Souza<span class="m-dot"></span></div>
-    <div class="m-item">Design com propósito<span class="m-dot"></span></div>
-    <div class="m-item">Identidade Visual<span class="m-dot"></span></div>
-    <div class="m-item">Branding Estratégico<span class="m-dot"></span></div>
-    <div class="m-item">Sites que convertem<span class="m-dot"></span></div>
-    <div class="m-item">Conteúdo para redes<span class="m-dot"></span></div>
-    <div class="m-item">Wender Souza · Brand Design<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq6">Design com propósito<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq6">Design com propósito<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq1">Identidade Visual</div><span class="m-dot"></span>
+    <div class="m-item" data-i18n="mq2">Branding Estratégico<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq3">Sites que convertem<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq4">Conteúdo para redes<span class="m-dot"></span></div>
     <div class="m-item">Wender Souza<span class="m-dot"></span></div>
-    <div class="m-item">Design com propósito<span class="m-dot"></span></div>
-    <div class="m-item">Identidade Visual<span class="m-dot"></span></div>
-    <div class="m-item">Branding Estratégico<span class="m-dot"></span></div>
-    <div class="m-item">Sites que convertem<span class="m-dot"></span></div>
-    <div class="m-item">Conteúdo para redes<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq6">Design com propósito<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq6">Design com propósito<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq1">Identidade Visual<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq2">Branding Estratégico<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq3">Sites que convertem<span class="m-dot"></span></div>
+    <div class="m-item" data-i18n="mq4">Conteúdo para redes<span class="m-dot"></span></div>
   </div>
 </div>
 
 <!-- STATS -->
 <section id="stats">
   <div class="stats-row">
-    <div class="stat rv"><div class="stat-n" data-count="6" data-s="+">0</div><div class="stat-l">Anos no mercado</div></div>
-    <div class="stat rv" style="transition-delay:.08s"><div class="stat-n" data-count="150" data-s="+">0</div><div class="stat-l">Marcas construídas</div></div>
-    <div class="stat rv" style="transition-delay:.16s"><div class="stat-n" data-count="4000" data-s="+">0</div><div class="stat-l">Designers impactados</div></div>
-    <div class="stat rv" style="transition-delay:.24s"><div class="stat-n">Zero</div><div class="stat-l">Margem pra mediocridade</div></div>
+    <div class="stat rv"><div class="stat-n" data-count="6" data-s="+">0</div><div class="stat-l" data-i18n="stat1">Anos no mercado</div></div>
+    <div class="stat rv" style="transition-delay:.08s"><div class="stat-n" data-count="150" data-s="+">0</div><div class="stat-l" data-i18n="stat2">Projetos entregues</div></div>
+    <div class="stat rv" style="transition-delay:.16s"><div class="stat-n">+20</div><div class="stat-l" data-i18n="stat3">Setores atendidos</div></div>
+    <div class="stat rv" style="transition-delay:.24s"><div class="stat-n">4</div><div class="stat-l" data-i18n="stat4">Países alcançados</div></div>
   </div>
 </section>
 
@@ -1217,32 +1307,32 @@ html{scroll-behavior:smooth}
 <section id="sobre" class="section section-alt section-border">
   <div class="inner">
     <div class="sobre-text rv-l">
-      <div class="eyebrow">Sobre mim</div>
-      <h2 class="section-title">Design não é decoração.<br><em>É posicionamento.</em></h2>
-      <p>Wender Souza existe para marcas que entendem que visual importa — e que querem fazer isso com método, não com achismo.</p>
-      <p>Wender Souza conduz cada projeto do início ao fim. Sem repassar para junior, sem terceirizar a parte que importa. O que você ver no portfólio é o que você recebe.</p>
-      <p style="margin-top:32px"><a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary" style="display:inline-flex">Conversar sobre meu projeto →</a></p>
+      <div class="eyebrow" data-i18n="sobre_eyebrow">Sobre mim</div>
+      <h2 class="section-title" data-i18n="sobre_h2">Design não é decoração.<br><em>É posicionamento.</em></h2>
+      <p data-i18n="sobre_p1">Wender Souza existe para marcas que entendem que visual importa — e que querem fazer isso com método, não com achismo.</p>
+      <p data-i18n="sobre_p2">Wender Souza conduz cada projeto do início ao fim. Sem repassar para junior, sem terceirizar a parte que importa. O que você ver no portfólio é o que você recebe.</p>
+      <p style="margin-top:32px"><a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary" style="display:inline-flex" data-i18n="sobre_btn">Conversar sobre meu projeto →</a></p>
     </div>
     <div class="sobre-cards rv">
       <div class="s-card">
         <div class="s-icon">🎯</div>
         <div>
-          <h3>Estratégia antes de tudo</h3>
-          <p>Cada projeto começa com as perguntas certas: quem é seu cliente, o que ele precisa sentir, e o que vai fazer ele escolher você.</p>
+          <h3 data-i18n="sc1_h">Estratégia antes de tudo</h3>
+          <p data-i18n="sc1_p">Cada projeto começa com as perguntas certas: quem é seu cliente, o que ele precisa sentir, e o que vai fazer ele escolher você.</p>
         </div>
       </div>
       <div class="s-card">
         <div class="s-icon">⚡</div>
         <div>
-          <h3>Tudo no mesmo lugar</h3>
-          <p>Marca, conteúdo e site com a mesma visão. Você não gerencia três fornecedores tentando se entender — gerencia um resultado coerente.</p>
+          <h3 data-i18n="sc2_h">Tudo no mesmo lugar</h3>
+          <p data-i18n="sc2_p">Marca, conteúdo e site com a mesma visão. Você não gerencia três fornecedores tentando se entender — gerencia um resultado coerente.</p>
         </div>
       </div>
       <div class="s-card">
         <div class="s-icon">🌐</div>
         <div>
-          <h3>Padrão sem fronteira</h3>
-          <p>Clientes no Brasil e no exterior. O nível de entrega é o mesmo independente do CEP — porque qualidade não deveria depender disso.</p>
+          <h3 data-i18n="sc3_h">Padrão sem fronteira</h3>
+          <p data-i18n="sc3_p">Clientes no Brasil e no exterior. O nível de entrega é o mesmo independente do CEP — porque qualidade não deveria depender disso.</p>
         </div>
       </div>
     </div>
@@ -1254,50 +1344,50 @@ html{scroll-behavior:smooth}
   <div class="inner">
     <div class="serv-header rv">
       <div>
-        <div class="eyebrow">O que fazemos</div>
-        <h2 class="section-title">Três serviços.<br>Um padrão.</h2>
+        <div class="eyebrow" data-i18n="serv_eyebrow">O que fazemos</div>
+        <h2 class="section-title" data-i18n="serv_h2">Três serviços.<br>Um padrão.</h2>
       </div>
-      <p class="section-sub">Escolhemos fazer menos e fazer muito bem. Cada entrega recebe atenção total — do briefing ao arquivo final.</p>
+      <p class="section-sub" data-i18n="serv_sub">Escolhemos fazer menos e fazer muito bem. Cada entrega recebe atenção total — do briefing ao arquivo final.</p>
     </div>
     <div class="serv-grid">
       <div class="serv-card rv" style="transition-delay:.05s">
         <div class="serv-n">01</div>
-        <h3>Identidade Visual</h3>
-        <div class="serv-tag">Para marcas que querem ser reconhecidas</div>
-        <p>Uma identidade bem feita faz seu cliente lembrar de você antes de pesquisar no Google. Criamos marcas com caráter próprio — do símbolo ao manual completo.</p>
+        <h3 data-i18n="s1_h">Identidade Visual</h3>
+        <div class="serv-tag" data-i18n="s1_tag">Para marcas que querem ser reconhecidas</div>
+        <p data-i18n="s1_p">Uma identidade bem feita faz seu cliente lembrar de você antes de pesquisar no Google. Criamos marcas com caráter próprio — do símbolo ao manual completo.</p>
         <ul class="serv-list">
-          <li>Logotipo e variações</li>
-          <li>Manual de identidade</li>
-          <li>Paleta e tipografia</li>
-          <li>Aplicações e mockups</li>
+          <li data-i18n="s1_l1">Logotipo e variações</li>
+          <li data-i18n="s1_l2">Manual de identidade</li>
+          <li data-i18n="s1_l3">Paleta e tipografia</li>
+          <li data-i18n="s1_l4">Aplicações e mockups</li>
         </ul>
-        <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link">Solicitar orçamento →</a>
+        <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link" data-i18n="s1_cta">Solicitar orçamento →</a>
       </div>
       <div class="serv-card rv" style="transition-delay:.1s">
         <div class="serv-n">02</div>
-        <h3>Conteúdo para Redes</h3>
-        <div class="serv-tag">Para marcas que não podem parecer improvisos</div>
-        <p>Feed inconsistente afasta cliente antes da abordagem. Criamos visual de rede social que gera reconhecimento e move quem vê em direção ao contato.</p>
+        <h3 data-i18n="s2_h">Conteúdo para Redes</h3>
+        <div class="serv-tag" data-i18n="s2_tag">Para marcas que não podem parecer improvisos</div>
+        <p data-i18n="s2_p">Feed inconsistente afasta cliente antes da abordagem. Criamos visual de rede social que gera reconhecimento e move quem vê em direção ao contato.</p>
         <ul class="serv-list">
-          <li>Posts e stories estratégicos</li>
-          <li>Templates editáveis</li>
-          <li>Identidade de feed</li>
-          <li>Peças de lançamento</li>
+          <li data-i18n="s2_l1">Posts e stories estratégicos</li>
+          <li data-i18n="s2_l2">Templates editáveis</li>
+          <li data-i18n="s2_l3">Identidade de feed</li>
+          <li data-i18n="s2_l4">Peças de lançamento</li>
         </ul>
-        <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link">Solicitar orçamento →</a>
+        <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link" data-i18n="s2_cta">Solicitar orçamento →</a>
       </div>
       <div class="serv-card rv" style="transition-delay:.15s">
         <div class="serv-n">03</div>
-        <h3>Sites</h3>
-        <div class="serv-tag">Para marcas que querem resultados além do cartão</div>
-        <p>Um site que existe só pra ter endereço não faz sentido. O nosso trabalho é construir páginas que guiam o visitante até o contato — sem distração no caminho.</p>
+        <h3 data-i18n="s3_h">Sites</h3>
+        <div class="serv-tag" data-i18n="s3_tag">Para marcas que querem resultados além do cartão</div>
+        <p data-i18n="s3_p">Um site que existe só pra ter endereço não faz sentido. O nosso trabalho é construir páginas que guiam o visitante até o contato — sem distração no caminho.</p>
         <ul class="serv-list">
-          <li>Landing pages de conversão</li>
-          <li>Sites institucionais</li>
-          <li>E-commerce</li>
-          <li>Performance e SEO</li>
+          <li data-i18n="s3_l1">Landing pages de conversão</li>
+          <li data-i18n="s3_l2">Sites institucionais</li>
+          <li data-i18n="s3_l3">E-commerce</li>
+          <li data-i18n="s3_l4">Performance e SEO</li>
         </ul>
-        <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link">Solicitar orçamento →</a>
+        <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link" data-i18n="s3_cta">Solicitar orçamento →</a>
       </div>
     </div>
   </div>
@@ -1311,7 +1401,7 @@ html{scroll-behavior:smooth}
         <div class="eyebrow">Portfólio</div>
         <h2 class="section-title">O trabalho fala<br>por si.</h2>
       </div>
-      <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link rv">Quero um projeto assim →</a>
+      <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="serv-link rv" data-i18n="port_link">Quero um projeto assim →</a>
     </div>
     <div class="port-grid">
       <div class="port-item rv" style="transition-delay:.05s">
@@ -1319,9 +1409,9 @@ html{scroll-behavior:smooth}
         <span class="port-badge">Branding</span>
         <div class="port-overlay"></div>
         <div class="port-info">
-          <div class="port-cat">Identidade Visual</div>
-          <h3>Firma Crossfit</h3>
-          <p>Marca que comunica força e disciplina antes de qualquer apresentação.</p>
+          <div class="port-cat" data-i18n="p1_cat">Identidade Visual</div>
+          <h3 data-i18n="p1_h">Firma Crossfit</h3>
+          <p data-i18n="p1_p">Marca que comunica força e disciplina antes de qualquer apresentação.</p>
         </div>
       </div>
       <div class="port-item rv" style="transition-delay:.1s">
@@ -1329,9 +1419,9 @@ html{scroll-behavior:smooth}
         <span class="port-badge">Branding</span>
         <div class="port-overlay"></div>
         <div class="port-info">
-          <div class="port-cat">Identidade Visual</div>
-          <h3>Raw Rise</h3>
-          <p>Identidade para fabricante de bonés que compete visualmente com qualquer grife.</p>
+          <div class="port-cat" data-i18n="p2_cat">Identidade Visual</div>
+          <h3 data-i18n="p2_h">Raw Rise</h3>
+          <p data-i18n="p2_p">Identidade para fabricante de bonés que compete visualmente com qualquer grife.</p>
         </div>
       </div>
       <div class="port-item rv" style="transition-delay:.15s">
@@ -1339,9 +1429,9 @@ html{scroll-behavior:smooth}
         <span class="port-badge">Produto Digital</span>
         <div class="port-overlay"></div>
         <div class="port-info">
-          <div class="port-cat">App &amp; Branding</div>
-          <h3>Kontrolei</h3>
-          <p>Do nome à interface: sistema de gestão para prestadores criado do zero.</p>
+          <div class="port-cat" data-i18n="p3_cat">App &amp; Branding</div>
+          <h3 data-i18n="p3_h">Kontrolei</h3>
+          <p data-i18n="p3_p">Do nome à interface: sistema de gestão para prestadores criado do zero.</p>
         </div>
       </div>
       <div class="port-item rv" style="transition-delay:.2s">
@@ -1349,9 +1439,9 @@ html{scroll-behavior:smooth}
         <span class="port-badge">Branding</span>
         <div class="port-overlay"></div>
         <div class="port-info">
-          <div class="port-cat">Identidade Visual</div>
-          <h3>Armillab</h3>
-          <p>Credibilidade científica e apelo natural na mesma identidade — entregamos os dois.</p>
+          <div class="port-cat" data-i18n="p4_cat">Identidade Visual</div>
+          <h3 data-i18n="p4_h">Armillab</h3>
+          <p data-i18n="p4_p">Credibilidade científica e apelo natural na mesma identidade — entregamos os dois.</p>
         </div>
       </div>
     </div>
@@ -1366,15 +1456,15 @@ html{scroll-behavior:smooth}
         <div class="eyebrow">Por que trabalhar comigo</div>
         <h2 class="section-title">Seis razões para<br>confiar no<br>processo.</h2>
       </div>
-      <p class="section-sub rv" style="transition-delay:.1s">Método claro, execução consistente e entrega documentada. É isso que diferencia um bom projeto de um projeto que funciona.</p>
+      <p class="section-sub rv" style="transition-delay:.1s" data-i18n="pq_sub">Método claro, execução consistente e entrega documentada. É isso que diferencia um bom projeto de um projeto que funciona.</p>
     </div>
     <div class="pq-grid">
-      <div class="pq-card rv" style="transition-delay:.05s"><div class="pq-icon">🎯</div><h3>Clareza antes do traço</h3><p>Nenhum pixel é colocado sem intenção. Antes de qualquer execução, entendemos o que sua marca precisa comunicar — e pra quem.</p></div>
-      <div class="pq-card rv" style="transition-delay:.1s"><div class="pq-icon">🔒</div><h3>Controle total do processo</h3><p>Do briefing à entrega, tudo passa pelo mesmo olhar. Sem repasse, sem ruído. Você tem um interlocutor — e ele é quem executa.</p></div>
-      <div class="pq-card rv" style="transition-delay:.15s"><div class="pq-icon">📐</div><h3>Consistência que gera confiança</h3><p>Marca, rede e site com a mesma voz visual. Quando tudo fala igual, seu cliente reconhece você antes de ler uma palavra.</p></div>
-      <div class="pq-card rv" style="transition-delay:.2s"><div class="pq-icon">⚖️</div><h3>Decisões com fundamento</h3><p>Cada escolha de cor, forma ou tipografia tem uma razão estratégica. Design aqui não é opinião — é argumento.</p></div>
-      <div class="pq-card rv" style="transition-delay:.25s"><div class="pq-icon">📅</div><h3>Entrega no prazo, sempre</h3><p>O que foi combinado é o que acontece. Sem surpresas no meio do caminho, sem desculpas na hora da entrega.</p></div>
-      <div class="pq-card rv" style="transition-delay:.3s"><div class="pq-icon">📁</div><h3>Você sai com autonomia</h3><p>Arquivos organizados, manual documentado e orientação de uso. O projeto termina — o conhecimento sobre ele fica com você.</p></div>
+      <div class="pq-card rv" style="transition-delay:.05s"><div class="pq-icon">🎯</div><h3 data-i18n="pq1_h">Clareza antes do traço</h3><p data-i18n="pq1_p">Nenhum pixel é colocado sem intenção. Antes de qualquer execução, entendemos o que sua marca precisa comunicar — e pra quem.</p></div>
+      <div class="pq-card rv" style="transition-delay:.1s"><div class="pq-icon">🔒</div><h3 data-i18n="pq2_h">Controle total do processo</h3><p data-i18n="pq2_p">Do briefing à entrega, tudo passa pelo mesmo olhar. Sem repasse, sem ruído. Você tem um interlocutor — e ele é quem executa.</p></div>
+      <div class="pq-card rv" style="transition-delay:.15s"><div class="pq-icon">📐</div><h3 data-i18n="pq3_h">Consistência que gera confiança</h3><p data-i18n="pq3_p">Marca, rede e site com a mesma voz visual. Quando tudo fala igual, seu cliente reconhece você antes de ler uma palavra.</p></div>
+      <div class="pq-card rv" style="transition-delay:.2s"><div class="pq-icon">⚖️</div><h3 data-i18n="pq4_h">Decisões com fundamento</h3><p data-i18n="pq4_p">Cada escolha de cor, forma ou tipografia tem uma razão estratégica. Design aqui não é opinião — é argumento.</p></div>
+      <div class="pq-card rv" style="transition-delay:.25s"><div class="pq-icon">📅</div><h3 data-i18n="pq5_h">Entrega no prazo, sempre</h3><p data-i18n="pq5_p">O que foi combinado é o que acontece. Sem surpresas no meio do caminho, sem desculpas na hora da entrega.</p></div>
+      <div class="pq-card rv" style="transition-delay:.3s"><div class="pq-icon">📁</div><h3 data-i18n="pq6_h">Você sai com autonomia</h3><p data-i18n="pq6_p">Arquivos organizados, manual documentado e orientação de uso. O projeto termina — o conhecimento sobre ele fica com você.</p></div>
     </div>
   </div>
 </section>
@@ -1383,16 +1473,16 @@ html{scroll-behavior:smooth}
 <section id="processo" class="section section-alt section-border">
   <div class="inner">
     <div class="rv">
-      <div class="eyebrow">Como funciona</div>
-      <h2 class="section-title">Do briefing ao<br>arquivo final.</h2>
-      <p class="section-sub">Processo direto. Sem reunião desnecessária, sem volta ao quadrado no meio do caminho.</p>
+      <div class="eyebrow" data-i18n="proc_eyebrow">Como funciona</div>
+      <h2 class="section-title" data-i18n="proc_h2">Do briefing ao<br>arquivo final.</h2>
+      <p class="section-sub" data-i18n="proc_sub">Processo direto. Sem reunião desnecessária, sem volta ao quadrado no meio do caminho.</p>
     </div>
     <div class="steps">
-      <div class="step-row"><div class="step-n">01</div><div class="step-body"><h3>Conversa inicial</h3><p>Você conta o que a sua marca precisa fazer — não só como você quer que ela pareça. Esse detalhe define tudo o que vem depois.</p></div></div>
-      <div class="step-row"><div class="step-n">02</div><div class="step-body"><h3>Posicionamento</h3><p>Definimos onde sua marca se encaixa no mercado, com quem ela fala e por que esse cliente deveria escolher você.</p></div></div>
-      <div class="step-row"><div class="step-n">03</div><div class="step-body"><h3>Criação</h3><p>Aqui entra o design. Cada elemento visual construído sobre o que foi definido antes — sem achismo, com propósito.</p></div></div>
-      <div class="step-row"><div class="step-n">04</div><div class="step-body"><h3>Ajuste fino</h3><p>Você vê, dá feedback, a gente afina. Duas rodadas de revisão incluídas — um briefing bom garante que raramente precisamos das duas.</p></div></div>
-      <div class="step-row"><div class="step-n">05</div><div class="step-body"><h3>Entrega documentada</h3><p>Arquivos organizados, manual de uso, orientação de aplicação. Você sai sabendo usar tudo que recebeu.</p></div></div>
+      <div class="step-row"><div class="step-n">01</div><div class="step-body"><h3 data-i18n="pr1_h">Conversa inicial</h3><p data-i18n="pr1_p">Você conta o que a sua marca precisa fazer — não só como você quer que ela pareça. Esse detalhe define tudo o que vem depois.</p></div></div>
+      <div class="step-row"><div class="step-n">02</div><div class="step-body"><h3 data-i18n="pr2_h">Posicionamento</h3><p data-i18n="pr2_p">Definimos onde sua marca se encaixa no mercado, com quem ela fala e por que esse cliente deveria escolher você.</p></div></div>
+      <div class="step-row"><div class="step-n">03</div><div class="step-body"><h3 data-i18n="pr3_h">Criação</h3><p data-i18n="pr3_p">Aqui entra o design. Cada elemento visual construído sobre o que foi definido antes — sem achismo, com propósito.</p></div></div>
+      <div class="step-row"><div class="step-n">04</div><div class="step-body"><h3 data-i18n="pr4_h">Ajuste fino</h3><p data-i18n="pr4_p">Você vê, dá feedback, a gente afina. Duas rodadas de revisão incluídas — um briefing bom garante que raramente precisamos das duas.</p></div></div>
+      <div class="step-row"><div class="step-n">05</div><div class="step-body"><h3 data-i18n="pr5_h">Entrega documentada</h3><p data-i18n="pr5_p">Arquivos organizados, manual de uso, orientação de aplicação. Você sai sabendo usar tudo que recebeu.</p></div></div>
     </div>
   </div>
 </section>
@@ -1406,17 +1496,17 @@ html{scroll-behavior:smooth}
       </div>
     </div>
     <div class="rv">
-      <div class="eyebrow">Quem está por trás</div>
-      <h2 class="section-title" style="margin-bottom:8px">Wender Souza</h2>
-      <div class="f-role">Brand Designer &amp; Art Director</div>
-      <p class="f-info" style="font-size:16px;color:var(--body);line-height:1.75;margin-bottom:14px">Comecei com uma convicção: a maioria das marcas não precisa de uma agência grande — precisa de alguém que entenda de negócio e execute bem.</p>
-      <p class="f-info" style="font-size:16px;color:var(--body);line-height:1.75">Seis anos depois, mais de 150 projetos confirmaram que essa aposta estava certa. Cada entrega recebe o mesmo nível de atenção do primeiro — independente do tamanho do cliente.</p>
+      <div class="eyebrow" data-i18n="fund_eyebrow">Quem está por trás</div>
+      <h2 class="section-title" style="margin-bottom:8px" data-i18n="fund_h2">Wender Souza</h2>
+      <div class="f-role" data-i18n="fund_role">Brand Designer &amp; Art Director</div>
+      <p class="f-info" style="font-size:16px;color:var(--body);line-height:1.75;margin-bottom:14px" data-i18n="fund_p1">Comecei com uma convicção: a maioria das marcas não precisa de uma agência grande — precisa de alguém que entenda de negócio e execute bem.</p>
+      <p class="f-info" style="font-size:16px;color:var(--body);line-height:1.75" data-i18n="fund_p2">Seis anos depois, mais de 150 projetos confirmaram que essa aposta estava certa. Cada entrega recebe o mesmo nível de atenção do primeiro — independente do tamanho do cliente.</p>
       <div class="f-stats">
-        <div class="f-stat"><div class="fn">150+</div><div class="fl">Projetos</div></div>
-        <div class="f-stat"><div class="fn">6</div><div class="fl">Anos</div></div>
-        <div class="f-stat"><div class="fn">∞</div><div class="fl">Exigência</div></div>
+        <div class="f-stat"><div class="fn">150+</div><div class="fl" data-i18n="fst1">Projetos</div></div>
+        <div class="f-stat"><div class="fn">6</div><div class="fl" data-i18n="fst2">Anos</div></div>
+        <div class="f-stat"><div class="fn">∞</div><div class="fl" data-i18n="fst3">Exigência</div></div>
       </div>
-      <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary">Falar com Wender →</a>
+      <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary" data-i18n="fund_btn">Falar com Wender →</a>
     </div>
   </div>
 </section>
@@ -1425,25 +1515,25 @@ html{scroll-behavior:smooth}
 <section id="depoimentos" class="section section-alt section-border">
   <div class="inner">
     <div class="rv">
-      <div class="eyebrow">Depoimentos</div>
-      <h2 class="section-title">Quem já passou<br>por aqui.</h2>
+      <div class="eyebrow" data-i18n="depo_eyebrow">Depoimentos</div>
+      <h2 class="section-title" data-i18n="depo_h2">Quem já passou<br>por aqui.</h2>
     </div>
   </div>
   <div class="depo-outer">
     <div class="depo-track">
       <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>O trabalho entregou uma identidade que nossos clientes comentam antes de entrar na academia. Virou parte do nosso pitch de venda.</blockquote><div class="d-author"><strong>Rafael Mendes</strong><span>CEO · Firma Crossfit</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Wender entendeu o produto antes de começar. O resultado foi uma marca que compete de igual com qualquer grife internacional do segmento.</blockquote><div class="d-author"><strong>Carlos Raw</strong><span>Fundador · Raw Rise</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Site novo, agendamentos aumentaram 40% no primeiro mês. Não é coincidência — é como o site foi construído pra funcionar.</blockquote><div class="d-author"><strong>Dra. Ana Paula</strong><span>Proprietária · Clínica Renovar</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>O diferencial foi o processo. Wender explica o porquê de cada decisão. Você entende o que está recebendo — e confia no resultado.</blockquote><div class="d-author"><strong>Lucas Ferreira</strong><span>CEO · Armillab</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Já trabalhei com agências maiores e mais caras. O Wender entregou mais resultado com mais atenção. Não troco mais.</blockquote><div class="d-author"><strong>Marina Costa</strong><span>Diretora · Studio MC</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Prazo cumprido, arquivos organizados, zero retrabalho. Parece básico, mas é raro. O Wender faz isso como padrão, não como exceção.</blockquote><div class="d-author"><strong>Pedro Alves</strong><span>Fundador · Kontrolei</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d2_q">Wender entendeu o produto antes de começar. O resultado foi uma marca que compete de igual com qualquer grife internacional do segmento.</blockquote><div class="d-author"><strong>Carlos Raw</strong><span>Fundador · Raw Rise</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d3_q">Site novo, agendamentos aumentaram 40% no primeiro mês. Não é coincidência — é como o site foi construído pra funcionar.</blockquote><div class="d-author"><strong>Dra. Ana Paula</strong><span>Proprietária · Clínica Renovar</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d4_q">O diferencial foi o processo. Wender explica o porquê de cada decisão. Você entende o que está recebendo — e confia no resultado.</blockquote><div class="d-author"><strong>Lucas Ferreira</strong><span>CEO · Armillab</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d5_q">Já trabalhei com agências maiores e mais caras. O Wender entregou mais resultado com mais atenção. Não troco mais.</blockquote><div class="d-author"><strong>Marina Costa</strong><span>Diretora · Studio MC</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d6_q">Prazo cumprido, arquivos organizados, zero retrabalho. Parece básico, mas é raro. O Wender faz isso como padrão, não como exceção.</blockquote><div class="d-author"><strong>Pedro Alves</strong><span>Fundador · Kontrolei</span></div></div>
       <!-- duplicates -->
       <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>O trabalho entregou uma identidade que nossos clientes comentam antes de entrar na academia. Virou parte do nosso pitch de venda.</blockquote><div class="d-author"><strong>Rafael Mendes</strong><span>CEO · Firma Crossfit</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Wender entendeu o produto antes de começar. O resultado foi uma marca que compete de igual com qualquer grife internacional do segmento.</blockquote><div class="d-author"><strong>Carlos Raw</strong><span>Fundador · Raw Rise</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Site novo, agendamentos aumentaram 40% no primeiro mês. Não é coincidência — é como o site foi construído pra funcionar.</blockquote><div class="d-author"><strong>Dra. Ana Paula</strong><span>Proprietária · Clínica Renovar</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>O diferencial foi o processo. Wender explica o porquê de cada decisão. Você entende o que está recebendo — e confia no resultado.</blockquote><div class="d-author"><strong>Lucas Ferreira</strong><span>CEO · Armillab</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Já trabalhei com agências maiores e mais caras. O Wender entregou mais resultado com mais atenção. Não troco mais.</blockquote><div class="d-author"><strong>Marina Costa</strong><span>Diretora · Studio MC</span></div></div>
-      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote>Prazo cumprido, arquivos organizados, zero retrabalho. Parece básico, mas é raro. O Wender faz isso como padrão, não como exceção.</blockquote><div class="d-author"><strong>Pedro Alves</strong><span>Fundador · Kontrolei</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d2_q">Wender entendeu o produto antes de começar. O resultado foi uma marca que compete de igual com qualquer grife internacional do segmento.</blockquote><div class="d-author"><strong>Carlos Raw</strong><span>Fundador · Raw Rise</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d3_q">Site novo, agendamentos aumentaram 40% no primeiro mês. Não é coincidência — é como o site foi construído pra funcionar.</blockquote><div class="d-author"><strong>Dra. Ana Paula</strong><span>Proprietária · Clínica Renovar</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d4_q">O diferencial foi o processo. Wender explica o porquê de cada decisão. Você entende o que está recebendo — e confia no resultado.</blockquote><div class="d-author"><strong>Lucas Ferreira</strong><span>CEO · Armillab</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d5_q">Já trabalhei com agências maiores e mais caras. O Wender entregou mais resultado com mais atenção. Não troco mais.</blockquote><div class="d-author"><strong>Marina Costa</strong><span>Diretora · Studio MC</span></div></div>
+      <div class="d-card"><div class="d-stars">★★★★★</div><blockquote data-i18n="d6_q">Prazo cumprido, arquivos organizados, zero retrabalho. Parece básico, mas é raro. O Wender faz isso como padrão, não como exceção.</blockquote><div class="d-author"><strong>Pedro Alves</strong><span>Fundador · Kontrolei</span></div></div>
     </div>
   </div>
 </section>
@@ -1452,37 +1542,37 @@ html{scroll-behavior:smooth}
 <section id="faq" class="section section-border">
   <div class="inner">
     <div class="rv">
-      <div class="eyebrow">Dúvidas</div>
-      <h2 class="section-title">Tudo que você quer<br>saber antes de<br><em>começar.</em></h2>
+      <div class="eyebrow" data-i18n="faq_eyebrow">Dúvidas</div>
+      <h2 class="section-title" data-i18n="faq_h2">Tudo que você quer<br>saber antes de<br><em>começar.</em></h2>
     </div>
     <div class="faq-list">
       <div class="faq-item">
-        <button class="faq-btn">Qual é o prazo de entrega? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">Identidade visual completa: entre 10 e 20 dias úteis. Manual de marca extenso pode ir até 30. O prazo é combinado antes de começar e respeitado até o fim — sem aquela história de "está quase pronto" por semanas.</div>
+        <button class="faq-btn" data-i18n-q="fq1_q">Qual é o prazo de entrega? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq1_a">Identidade visual completa: entre 10 e 20 dias úteis. Manual de marca extenso pode ir até 30. O prazo é combinado antes de começar e respeitado até o fim — sem aquela história de "está quase pronto" por semanas.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-btn">Como funciona o investimento? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">50% na assinatura do contrato, 50% na entrega. Projetos maiores podem ser divididos em até 3 parcelas. Aceito Pix, transferência e cartão. Nada de surpresa depois do orçamento fechado.</div>
+        <button class="faq-btn" data-i18n-q="fq2_q">Como funciona o investimento? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq2_a">50% na assinatura do contrato, 50% na entrega. Projetos maiores podem ser divididos em até 3 parcelas. Aceito Pix, transferência e cartão. Nada de surpresa depois do orçamento fechado.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-btn">Quantas revisões estão inclusas? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">Duas rodadas de revisão em todos os projetos. Na prática, o briefing que fazemos antes é tão detalhado que a primeira apresentação já chega muito próxima do resultado final. Revisão extra existe — mas raramente é necessária.</div>
+        <button class="faq-btn" data-i18n-q="fq3_q">Quantas revisões estão inclusas? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq3_a">Duas rodadas de revisão em todos os projetos. Na prática, o briefing que fazemos antes é tão detalhado que a primeira apresentação já chega muito próxima do resultado final. Revisão extra existe — mas raramente é necessária.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-btn">Vou receber todos os arquivos? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">Sim, tudo: AI, PSD, PDF, PNG, JPG e SVG, organizados por categoria. É a sua marca — você recebe os arquivos fonte e pode usar, adaptar e compartilhar sem precisar de autorização.</div>
+        <button class="faq-btn" data-i18n-q="fq4_q">Vou receber todos os arquivos? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq4_a">Sim, tudo: AI, PSD, PDF, PNG, JPG e SVG, organizados por categoria. É a sua marca — você recebe os arquivos fonte e pode usar, adaptar e compartilhar sem precisar de autorização.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-btn">Você atende em todo o Brasil? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">Sim, Brasil inteiro e exterior também. Todo o processo é 100% remoto — briefing, apresentações, revisões e entrega acontecem online, sem perda de qualidade. Já atendi clientes em outros países sem nenhuma diferença no resultado.</div>
+        <button class="faq-btn" data-i18n-q="fq5_q">Você atende em todo o Brasil? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq5_a">Sim, Brasil inteiro e exterior também. Todo o processo é 100% remoto — briefing, apresentações, revisões e entrega acontecem online, sem perda de qualidade. Já atendi clientes em outros países sem nenhuma diferença no resultado.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-btn">Preciso ter referências prontas para começar? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">Não. Parte do processo é justamente descobrir essas referências junto com você. Se você tiver algo em mente, ótimo — mas se chegar só com o problema que quer resolver, já é o suficiente para começar.</div>
+        <button class="faq-btn" data-i18n-q="fq6_q">Preciso ter referências prontas para começar? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq6_a">Não. Parte do processo é justamente descobrir essas referências junto com você. Se você tiver algo em mente, ótimo — mas se chegar só com o problema que quer resolver, já é o suficiente para começar.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-btn">E se eu não gostar do resultado? <div class="faq-icon">+</div></button>
-        <div class="faq-ans">As duas rodadas de revisão existem exatamente pra isso. Mas o briefing detalhado que fazemos antes garante que estamos alinhados antes de qualquer entrega. Projetos bem iniciados raramente chegam a esse ponto.</div>
+        <button class="faq-btn" data-i18n-q="fq7_q">E se eu não gostar do resultado? <div class="faq-icon">+</div></button>
+        <div class="faq-ans" data-i18n="fq7_a">As duas rodadas de revisão existem exatamente pra isso. Mas o briefing detalhado que fazemos antes garante que estamos alinhados antes de qualquer entrega. Projetos bem iniciados raramente chegam a esse ponto.</div>
       </div>
     </div>
   </div>
@@ -1491,11 +1581,11 @@ html{scroll-behavior:smooth}
 <!-- CTA -->
 <section id="cta">
   <div class="cta-glow"></div>
-  <div class="eyebrow rv">Próximo passo</div>
-  <h2 class="rv">Sua marca merece<br><em>trabalhar por você.</em></h2>
+  <div class="eyebrow rv" data-i18n="cta_eyebrow">Próximo passo</div>
+  <h2 data-i18n="cta_h2" class="rv">Sua marca merece<br><em>trabalhar por você.</em></h2>
   <div class="hero-btns rv" style="justify-content:center;margin-top:40px">
-    <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary">Falar com Wender →</a>
-    <a href="#portfolio" class="btn-ghost">Ver portfólio</a>
+    <a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento." class="btn-primary" data-i18n="cta_btn1">Falar com Wender →</a>
+    <a href="#portfolio" class="btn-ghost" data-i18n="cta_btn2">Ver portfólio</a>
   </div>
 </section>
 
@@ -1504,14 +1594,14 @@ html{scroll-behavior:smooth}
   <div class="foot-grid">
     <div class="foot-brand">
       <span class="logo nav-logo">Wender Souza<em>.</em></span>
-      <p>Brand Designer &amp; Art Director.<br>Design com clareza. Resultado com consistência.</p>
+      <p data-i18n="foot_desc">Brand Designer &amp; Art Director.<br>Design com clareza. Resultado com consistência.</p>
     </div>
-    <div class="foot-col"><h4>Serviços</h4><ul><li><a href="#servicos">Identidade Visual</a></li><li><a href="#servicos">Conteúdo para Redes</a></li><li><a href="#servicos">Sites</a></li></ul></div>
-    <div class="foot-col"><h4>Navegação</h4><ul><li><a href="#sobre">Sobre mim</a></li><li><a href="#portfolio">Portfólio</a></li><li><a href="#processo">Como funciona</a></li><li><a href="#faq">Dúvidas</a></li></ul></div>
-    <div class="foot-col"><h4>Contato</h4><ul><li><a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento.">WhatsApp</a></li><li><a href="https://behance.net/wenderbrand" target="_blank">Behance</a></li><li><a href="https://instagram.com/bridgebrand" target="_blank">Instagram</a></li></ul></div>
+    <div class="foot-col"><h4 data-i18n="foot_serv">Serviços</h4><ul><li><a href="#servicos" data-i18n="foot_serv1">Identidade Visual</a></li><li><a href="#servicos" data-i18n="foot_serv2">Conteúdo para Redes</a></li><li><a href="#servicos" data-i18n="foot_serv3">Sites</a></li></ul></div>
+    <div class="foot-col"><h4 data-i18n="foot_nav">Navegação</h4><ul><li><a href="#sobre" data-i18n="foot_nav1">Sobre mim</a></li><li><a href="#portfolio">Portfólio</a></li><li><a href="#processo" data-i18n="foot_nav3">Como funciona</a></li><li><a href="#faq" data-i18n="foot_nav4">Dúvidas</a></li></ul></div>
+    <div class="foot-col"><h4 data-i18n="foot_contact">Contato</h4><ul><li><a href="https://wa.me/5531982643998?text=Ol%C3%A1%2C%20vim%20pelo%20site%21%20Gostaria%20de%20fazer%20um%20or%C3%A7amento.">WhatsApp</a></li><li><a href="https://behance.net/wenderbrand" target="_blank">Behance</a></li><li><a href="https://instagram.com/bridgebrand" target="_blank">Instagram</a></li></ul></div>
   </div>
   <div class="foot-bottom">
-    <p>© 2026 Wender Souza</p>
+    <p data-i18n="foot_copyright">© 2026 Wender Souza</p>
     <p>CNPJ 61.890.163/0001-81</p>
   </div>
 </footer>
@@ -1811,7 +1901,340 @@ const stObs = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 document.querySelectorAll('.step-row').forEach(el => stObs.observe(el));
 
-/* ══ FAQ ══ */
+/* ══ LANGUAGE SWITCHER — COMPLETE ══ */
+const LANGS = {
+  'pt-br': {
+    flag:'🇧🇷', label:'PT-BR', htmlLang:'pt-BR',
+    // NAV
+    'nav_servicos':'Serviços','nav_portfolio':'Portfólio','nav_sobre':'Sobre','nav_faq':'FAQ',
+    'nav_cta':'Falar no WhatsApp',
+    // HERO
+    'hero_eyebrow':'Wender Souza — Brand Designer &amp; Art Director',
+    'hero_h1':'Design que<br><em>constrói</em> marcas<br>que ficam.',
+    'hero_p':'Identidade visual, conteúdo e sites pensados para posicionar sua marca com clareza — e fazer ela trabalhar por você todos os dias.',
+    'hero_btn1':'Iniciar projeto →','hero_btn2':'Ver portfólio',
+    // MARQUEE
+    'mq1':'Identidade Visual','mq2':'Branding Estratégico','mq3':'Sites que convertem',
+    'mq4':'Conteúdo para redes','mq5':'Wender Souza','mq6':'Design com propósito',
+    // STATS
+    'stat1':'Anos no mercado','stat2':'Projetos entregues','stat3':'Setores atendidos','stat4':'Países alcançados',
+    // SOBRE
+    'sobre_eyebrow':'Sobre mim',
+    'sobre_h2':'Design não é decoração.<br><em>É posicionamento.</em>',
+    'sobre_p1':'Wender Souza existe para marcas que entendem que visual importa — e que querem fazer isso com método, não com achismo.',
+    'sobre_p2':'Wender Souza conduz cada projeto do início ao fim. Sem repassar para junior, sem terceirizar a parte que importa. O que você ver no portfólio é o que você recebe.',
+    'sobre_btn':'Conversar sobre meu projeto →',
+    'sc1_h':'Estratégia antes de tudo','sc1_p':'Cada projeto começa com as perguntas certas: quem é seu cliente, o que ele precisa sentir, e o que vai fazer ele escolher você.',
+    'sc2_h':'Tudo no mesmo lugar','sc2_p':'Marca, conteúdo e site com a mesma visão. Você não gerencia três fornecedores tentando se entender — gerencia um resultado coerente.',
+    'sc3_h':'Padrão sem fronteira','sc3_p':'Clientes no Brasil e no exterior. O nível de entrega é o mesmo independente do CEP — porque qualidade não deveria depender disso.',
+    // SERVIÇOS
+    'serv_eyebrow':'O que fazemos','serv_h2':'Três serviços.<br>Um padrão.',
+    'serv_sub':'Escolhemos fazer menos e fazer muito bem. Cada entrega recebe atenção total — do briefing ao arquivo final.',
+    's1_h':'Identidade Visual','s1_tag':'Para marcas que querem ser reconhecidas',
+    's1_p':'Uma identidade bem feita faz seu cliente lembrar de você antes de pesquisar no Google. Criamos marcas com caráter próprio — do símbolo ao manual completo.',
+    's1_l1':'Logotipo e variações','s1_l2':'Manual de identidade','s1_l3':'Paleta e tipografia','s1_l4':'Aplicações e mockups','s1_cta':'Solicitar orçamento →',
+    's2_h':'Conteúdo para Redes','s2_tag':'Para marcas que não podem parecer improvisos',
+    's2_p':'Feed inconsistente afasta cliente antes da abordagem. Criamos visual de rede social que gera reconhecimento e move quem vê em direção ao contato.',
+    's2_l1':'Posts e stories estratégicos','s2_l2':'Templates editáveis','s2_l3':'Identidade de feed','s2_l4':'Peças de lançamento','s2_cta':'Solicitar orçamento →',
+    's3_h':'Sites','s3_tag':'Para marcas que querem resultados além do cartão',
+    's3_p':'Um site que existe só pra ter endereço não faz sentido. O nosso trabalho é construir páginas que guiam o visitante até o contato — sem distração no caminho.',
+    's3_l1':'Landing pages de conversão','s3_l2':'Sites institucionais','s3_l3':'E-commerce','s3_l4':'Performance e SEO','s3_cta':'Solicitar orçamento →',
+    // PORTFÓLIO
+    'port_eyebrow':'Portfólio','port_h2':'O trabalho fala<br>por si.',
+    'port_link':'Quero um projeto assim →',
+    'p1_cat':'Identidade Visual','p1_h':'Firma Crossfit','p1_p':'Marca que comunica força e disciplina antes de qualquer apresentação.',
+    'p2_cat':'Identidade Visual','p2_h':'Raw Rise','p2_p':'Identidade para fabricante de bonés que compete visualmente com qualquer grife.',
+    'p3_cat':'App &amp; Branding','p3_h':'Kontrolei','p3_p':'Do nome à interface: sistema de gestão para prestadores criado do zero.',
+    'p4_cat':'Identidade Visual','p4_h':'Armillab','p4_p':'Credibilidade científica e apelo natural na mesma identidade — entregamos os dois.',
+    // PORQUE
+    'pq_eyebrow':'Por que trabalhar comigo',
+    'pq_h2':'Seis razões para<br>confiar no<br>processo.',
+    'pq_sub':'Método claro, execução consistente e entrega documentada. É isso que diferencia um bom projeto de um projeto que funciona.',
+    'pq1_h':'Clareza antes do traço','pq1_p':'Nenhum pixel é colocado sem intenção. Antes de qualquer execução, entendemos o que sua marca precisa comunicar — e pra quem.',
+    'pq2_h':'Controle total do processo','pq2_p':'Do briefing à entrega, tudo passa pelo mesmo olhar. Sem repasse, sem ruído. Você tem um interlocutor — e ele é quem executa.',
+    'pq3_h':'Consistência que gera confiança','pq3_p':'Marca, rede e site com a mesma voz visual. Quando tudo fala igual, seu cliente reconhece você antes de ler uma palavra.',
+    'pq4_h':'Decisões com fundamento','pq4_p':'Cada escolha de cor, forma ou tipografia tem uma razão estratégica. Design aqui não é opinião — é argumento.',
+    'pq5_h':'Entrega no prazo, sempre','pq5_p':'O que foi combinado é o que acontece. Sem surpresas no meio do caminho, sem desculpas na hora da entrega.',
+    'pq6_h':'Você sai com autonomia','pq6_p':'Arquivos organizados, manual documentado e orientação de uso. O projeto termina — o conhecimento sobre ele fica com você.',
+    // PROCESSO
+    'proc_eyebrow':'Como funciona','proc_h2':'Do briefing ao<br>arquivo final.',
+    'proc_sub':'Processo direto. Sem reunião desnecessária, sem volta ao quadrado no meio do caminho.',
+    'pr1_h':'Conversa inicial','pr1_p':'Você conta o que a sua marca precisa fazer — não só como você quer que ela pareça. Esse detalhe define tudo o que vem depois.',
+    'pr2_h':'Posicionamento','pr2_p':'Definimos onde sua marca se encaixa no mercado, com quem ela fala e por que esse cliente deveria escolher você.',
+    'pr3_h':'Criação','pr3_p':'Aqui entra o design. Cada elemento visual construído sobre o que foi definido antes — sem achismo, com propósito.',
+    'pr4_h':'Ajuste fino','pr4_p':'Você vê, dá feedback, a gente afina. Duas rodadas de revisão incluídas — um briefing bom garante que raramente precisamos das duas.',
+    'pr5_h':'Entrega documentada','pr5_p':'Arquivos organizados, manual de uso, orientação de aplicação. Você sai sabendo usar tudo que recebeu.',
+    // FUNDADOR
+    'fund_eyebrow':'Quem está por trás','fund_h2':'Wender Souza',
+    'fund_role':'Brand Designer &amp; Art Director',
+    'fund_p1':'Comecei com uma convicção: a maioria das marcas não precisa de uma agência grande — precisa de alguém que entenda de negócio e execute bem.',
+    'fund_p2':'Seis anos depois, mais de 150 projetos confirmaram que essa aposta estava certa. Cada entrega recebe o mesmo nível de atenção do primeiro — independente do tamanho do cliente.',
+    'fund_btn':'Falar com Wender →',
+    'fst1':'Projetos','fst2':'Anos','fst3':'Exigência',
+    // DEPOIMENTOS
+    'depo_eyebrow':'Depoimentos','depo_h2':'Quem já passou<br>por aqui.',
+    'd1_q':'A Bridge entregou uma identidade que nossos clientes comentam antes de entrar na academia. Virou parte do nosso pitch de venda.',
+    'd2_q':'Wender entendeu o produto antes de começar. O resultado foi uma marca que compete de igual com qualquer grife internacional do segmento.',
+    'd3_q':'Site novo, agendamentos aumentaram 40% no primeiro mês. Não é coincidência — é como o site foi construído pra funcionar.',
+    'd4_q':'O diferencial foi o processo. Wender explica o porquê de cada decisão. Você entende o que está recebendo — e confia no resultado.',
+    'd5_q':'Já trabalhei com agências maiores e mais caras. O Wender entregou mais resultado com mais atenção. Não troco mais.',
+    'd6_q':'Prazo cumprido, arquivos organizados, zero retrabalho. Parece básico, mas é raro. O Wender faz isso como padrão, não como exceção.',
+    // FAQ
+    'faq_eyebrow':'Dúvidas','faq_h2':'Tudo que você quer<br>saber antes de<br><em>começar.</em>',
+    'fq1_q':'Qual é o prazo de entrega?','fq1_a':'Identidade visual completa: entre 10 e 20 dias úteis. Manual de marca extenso pode ir até 30. O prazo é combinado antes de começar e respeitado até o fim — sem aquela história de "está quase pronto" por semanas.',
+    'fq2_q':'Como funciona o investimento?','fq2_a':'50% na assinatura do contrato, 50% na entrega. Projetos maiores podem ser divididos em até 3 parcelas. Aceito Pix, transferência e cartão. Nada de surpresa depois do orçamento fechado.',
+    'fq3_q':'Quantas revisões estão inclusas?','fq3_a':'Duas rodadas de revisão em todos os projetos. Na prática, o briefing que fazemos antes é tão detalhado que a primeira apresentação já chega muito próxima do resultado final. Revisão extra existe — mas raramente é necessária.',
+    'fq4_q':'Vou receber todos os arquivos?','fq4_a':'Sim, tudo: AI, PSD, PDF, PNG, JPG e SVG, organizados por categoria. É a sua marca — você recebe os arquivos fonte e pode usar, adaptar e compartilhar sem precisar de autorização.',
+    'fq5_q':'Você atende em todo o Brasil?','fq5_a':'Sim, Brasil inteiro e exterior também. Todo o processo é 100% remoto — briefing, apresentações, revisões e entrega acontecem online, sem perda de qualidade. Já atendi clientes em outros países sem nenhuma diferença no resultado.',
+    'fq6_q':'Preciso ter referências prontas para começar?','fq6_a':'Não. Parte do processo é justamente descobrir essas referências junto com você. Se você tiver algo em mente, ótimo — mas se chegar só com o problema que quer resolver, já é o suficiente para começar.',
+    'fq7_q':'E se eu não gostar do resultado?','fq7_a':'As duas rodadas de revisão existem exatamente pra isso. Mas o briefing detalhado que fazemos antes garante que estamos alinhados antes de qualquer entrega. Projetos bem iniciados raramente chegam a esse ponto.',
+    // CTA
+    'cta_eyebrow':'Próximo passo',
+    'cta_h2':'Sua marca merece<br><em>trabalhar por você.</em>',
+    'cta_btn1':'Falar com Wender →','cta_btn2':'Ver portfólio',
+    // FOOTER
+    'foot_serv':'Serviços','foot_serv1':'Identidade Visual','foot_serv2':'Conteúdo para Redes','foot_serv3':'Sites',
+    'foot_nav':'Navegação','foot_nav1':'Sobre mim','foot_nav2':'Portfólio','foot_nav3':'Como funciona','foot_nav4':'Dúvidas',
+    'foot_contact':'Contato',
+    'foot_desc':'Brand Designer &amp; Art Director.<br>Design com clareza. Resultado com consistência.',
+    'foot_copyright':'© 2026 Wender Souza',
+  },
+  'pt-pt': {
+    flag:'🇵🇹', label:'PT-PT', htmlLang:'pt-PT',
+    'nav_servicos':'Serviços','nav_portfolio':'Portfólio','nav_sobre':'Sobre','nav_faq':'FAQ',
+    'nav_cta':'Falar no WhatsApp',
+    'hero_eyebrow':'Wender Souza — Brand Designer &amp; Director de Arte',
+    'hero_h1':'Design que<br><em>constrói</em> marcas<br>que ficam.',
+    'hero_p':'Identidade visual, conteúdo e sites pensados para posicionar a sua marca com clareza — e fazê-la trabalhar por si todos os dias.',
+    'hero_btn1':'Iniciar projecto →','hero_btn2':'Ver portfólio',
+    'mq1':'Identidade Visual','mq2':'Branding Estratégico','mq3':'Sites que convertem',
+    'mq4':'Conteúdo para redes','mq5':'Wender Souza','mq6':'Design com propósito',
+    'stat1':'Anos no mercado','stat2':'Projectos entregues','stat3':'Sectores atendidos','stat4':'Países alcançados',
+    'sobre_eyebrow':'Sobre mim',
+    'sobre_h2':'Design não é decoração.<br><em>É posicionamento.</em>',
+    'sobre_p1':'Wender Souza existe para marcas que entendem que o visual importa — e que querem fazê-lo com método, não com achismo.',
+    'sobre_p2':'Wender Souza conduz cada projecto do início ao fim. Sem repassar para júnior, sem terceirizar a parte que importa. O que vê no portfólio é o que recebe.',
+    'sobre_btn':'Conversar sobre o meu projecto →',
+    'sc1_h':'Estratégia antes de tudo','sc1_p':'Cada projecto começa com as perguntas certas: quem é o seu cliente, o que ele precisa sentir e o que o vai fazer escolher-vos.',
+    'sc2_h':'Tudo no mesmo lugar','sc2_p':'Marca, conteúdo e site com a mesma visão. Não gere três fornecedores — gere um resultado coerente.',
+    'sc3_h':'Padrão sem fronteiras','sc3_p':'Clientes em Portugal, no Brasil e no estrangeiro. O nível de entrega é o mesmo independentemente da localização.',
+    'serv_eyebrow':'O que fazemos','serv_h2':'Três serviços.<br>Um padrão.',
+    'serv_sub':'Escolhemos fazer menos e fazer muito bem. Cada entrega recebe atenção total — do briefing ao ficheiro final.',
+    's1_h':'Identidade Visual','s1_tag':'Para marcas que querem ser reconhecidas',
+    's1_p':'Uma identidade bem feita faz o seu cliente lembrar-se de si antes de pesquisar no Google. Criamos marcas com carácter próprio — do símbolo ao manual completo.',
+    's1_l1':'Logótipo e variações','s1_l2':'Manual de identidade','s1_l3':'Paleta e tipografia','s1_l4':'Aplicações e mockups','s1_cta':'Solicitar orçamento →',
+    's2_h':'Conteúdo para Redes','s2_tag':'Para marcas que não podem parecer amadores',
+    's2_p':'Feed inconsistente afasta clientes antes da abordagem. Criamos visual de redes sociais que gera reconhecimento e converte.',
+    's2_l1':'Posts e stories estratégicos','s2_l2':'Templates editáveis','s2_l3':'Identidade de feed','s2_l4':'Peças de lançamento','s2_cta':'Solicitar orçamento →',
+    's3_h':'Sites','s3_tag':'Para marcas que querem resultados além do cartão',
+    's3_p':'Um site que existe só para ter morada não faz sentido. O nosso trabalho é construir páginas que guiam o visitante até ao contacto — sem distracção.',
+    's3_l1':'Landing pages de conversão','s3_l2':'Sites institucionais','s3_l3':'E-commerce','s3_l4':'Performance e SEO','s3_cta':'Solicitar orçamento →',
+    'port_eyebrow':'Portfólio','port_h2':'O trabalho fala<br>por si.',
+    'port_link':'Quero um projecto assim →',
+    'p1_cat':'Identidade Visual','p1_h':'Firma Crossfit','p1_p':'Marca que comunica força e disciplina antes de qualquer apresentação.',
+    'p2_cat':'Identidade Visual','p2_h':'Raw Rise','p2_p':'Identidade para fabricante de bonés que compete visualmente com qualquer marca internacional.',
+    'p3_cat':'App &amp; Branding','p3_h':'Kontrolei','p3_p':'Do nome à interface: sistema de gestão para prestadores criado do zero.',
+    'p4_cat':'Identidade Visual','p4_h':'Armillab','p4_p':'Credibilidade científica e apelo natural na mesma identidade.',
+    'pq_eyebrow':'Por que trabalhar comigo',
+    'pq_h2':'Seis razões para<br>confiar no<br>processo.',
+    'pq_sub':'Método claro, execução consistente e entrega documentada.',
+    'pq1_h':'Clareza antes do traço','pq1_p':'Nenhum pixel é colocado sem intenção. Antes de qualquer execução, entendemos o que a sua marca precisa comunicar.',
+    'pq2_h':'Controlo total do processo','pq2_p':'Do briefing à entrega, tudo passa pelo mesmo olhar. Sem repasses, sem ruído.',
+    'pq3_h':'Consistência que gera confiança','pq3_p':'Marca, rede e site com a mesma voz visual. Quando tudo fala igual, o seu cliente reconhece-o antes de ler uma palavra.',
+    'pq4_h':'Decisões com fundamento','pq4_p':'Cada escolha visual tem uma razão estratégica. Design aqui não é opinião — é argumento.',
+    'pq5_h':'Entrega no prazo, sempre','pq5_p':'O que foi combinado é o que acontece. Sem surpresas, sem desculpas.',
+    'pq6_h':'Sai com autonomia','pq6_p':'Ficheiros organizados, manual documentado e orientação de uso. O projecto termina — o conhecimento fica consigo.',
+    'proc_eyebrow':'Como funciona','proc_h2':'Do briefing ao<br>ficheiro final.',
+    'proc_sub':'Processo directo. Sem reuniões desnecessárias, sem recuar ao início.',
+    'pr1_h':'Conversa inicial','pr1_p':'Conta o que a sua marca precisa de fazer — não só como quer que ela pareça. Esse detalhe define tudo o que vem depois.',
+    'pr2_h':'Posicionamento','pr2_p':'Definimos onde a sua marca se encaixa no mercado, com quem fala e por que esse cliente deveria escolhê-la.',
+    'pr3_h':'Criação','pr3_p':'Aqui entra o design. Cada elemento visual construído sobre o que foi definido antes — sem achismo, com propósito.',
+    'pr4_h':'Ajuste fino','pr4_p':'Vê, dá feedback, afinamos. Duas rondas de revisão incluídas.',
+    'pr5_h':'Entrega documentada','pr5_p':'Ficheiros organizados, manual de uso, orientação de aplicação. Sai a saber usar tudo o que recebeu.',
+    'fund_eyebrow':'Quem está por detrás','fund_h2':'Wender Souza',
+    'fund_role':'Brand Designer &amp; Director de Arte',
+    'fund_p1':'Comecei com uma convicção: a maioria das marcas não precisa de uma grande agência — precisa de alguém que entenda de negócio e execute bem.',
+    'fund_p2':'Seis anos depois, mais de 150 projectos confirmaram que essa aposta estava certa. Cada entrega recebe o mesmo nível de atenção do primeiro.',
+    'fund_btn':'Falar com Wender →',
+    'fst1':'Projectos','fst2':'Anos','fst3':'Exigência',
+    'depo_eyebrow':'Testemunhos','depo_h2':'Quem já passou<br>por aqui.',
+    'd1_q':'A identidade entregue é comentada pelos nossos clientes antes de entrarem na academia. Tornou-se parte do nosso pitch de vendas.',
+    'd2_q':'O Wender percebeu o produto antes de começar. O resultado foi uma marca que compete com qualquer referência internacional.',
+    'd3_q':'Site novo, marcações aumentaram 40% no primeiro mês. Não é coincidência — é como o site foi construído para funcionar.',
+    'd4_q':'O diferencial foi o processo. O Wender explica o porquê de cada decisão. Percebe-se o que se está a receber — e confia-se no resultado.',
+    'd5_q':'Já trabalhei com agências maiores e mais caras. O Wender entregou mais resultado com mais atenção. Não troco.',
+    'd6_q':'Prazo cumprido, ficheiros organizados, zero retrabalho. Parece básico, mas é raro. É o padrão aqui.',
+    'faq_eyebrow':'Dúvidas','faq_h2':'Tudo o que quer<br>saber antes de<br><em>começar.</em>',
+    'fq1_q':'Qual é o prazo de entrega?','fq1_a':'Identidade visual completa: entre 10 e 20 dias úteis. Manual extenso pode ir até 30. O prazo é combinado antes de começar e respeitado até ao fim.',
+    'fq2_q':'Como funciona o investimento?','fq2_a':'50% na assinatura do contrato, 50% na entrega. Projectos maiores podem ser divididos em até 3 prestações. Aceito transferência e cartão.',
+    'fq3_q':'Quantas revisões estão incluídas?','fq3_a':'Duas rondas de revisão em todos os projectos. O briefing detalhado garante que a primeira apresentação já chega muito próxima do resultado final.',
+    'fq4_q':'Vou receber todos os ficheiros?','fq4_a':'Sim: AI, PSD, PDF, PNG, JPG e SVG, organizados por categoria. É a sua marca — usa, adapta e partilha sem precisar de autorização.',
+    'fq5_q':'Atende clientes em Portugal?','fq5_a':'Sim, Portugal, Brasil e outros países. Todo o processo é 100% remoto, sem perda de qualidade.',
+    'fq6_q':'Preciso de ter referências para começar?','fq6_a':'Não. Parte do processo é descobrir essas referências em conjunto. Se chegar só com o problema que quer resolver, já chega.',
+    'fq7_q':'E se não gostar do resultado?','fq7_a':'As duas rondas de revisão existem para isso. O briefing detalhado garante alinhamento antes de qualquer entrega.',
+    'cta_eyebrow':'Próximo passo',
+    'cta_h2':'A sua marca merece<br><em>trabalhar por si.</em>',
+    'cta_btn1':'Falar com Wender →','cta_btn2':'Ver portfólio',
+    'foot_serv':'Serviços','foot_serv1':'Identidade Visual','foot_serv2':'Conteúdo para Redes','foot_serv3':'Sites',
+    'foot_nav':'Navegação','foot_nav1':'Sobre mim','foot_nav2':'Portfólio','foot_nav3':'Como funciona','foot_nav4':'Dúvidas',
+    'foot_contact':'Contacto',
+    'foot_desc':'Brand Designer &amp; Director de Arte.<br>Design com clareza. Resultados com consistência.',
+    'foot_copyright':'© 2026 Wender Souza',
+  },
+  'en': {
+    flag:'🇺🇸', label:'EN', htmlLang:'en',
+    'nav_servicos':'Services','nav_portfolio':'Portfolio','nav_sobre':'About','nav_faq':'FAQ',
+    'nav_cta':'Chat on WhatsApp',
+    'hero_eyebrow':'Wender Souza — Brand Designer &amp; Art Director',
+    'hero_h1':'Design that<br><em>builds</em> brands<br>that last.',
+    'hero_p':'Visual identity, content and websites designed to position your brand with clarity — and make it work for you every single day.',
+    'hero_btn1':'Start a project →','hero_btn2':'View portfolio',
+    'mq1':'Visual Identity','mq2':'Strategic Branding','mq3':'Converting websites',
+    'mq4':'Social media content','mq5':'Wender Souza','mq6':'Design with purpose',
+    'stat1':'Years in the market','stat2':'Projects delivered','stat3':'Sectors served','stat4':'Countries reached',
+    'sobre_eyebrow':'About me',
+    'sobre_h2':'Design is not decoration.<br><em>It\'s positioning.</em>',
+    'sobre_p1':'Wender Souza exists for brands that understand visuals matter — and want to do it with method, not guesswork.',
+    'sobre_p2':'Wender leads every project from start to finish. No passing off to a junior, no outsourcing the parts that matter. What you see in the portfolio is what you get.',
+    'sobre_btn':'Talk about my project →',
+    'sc1_h':'Strategy first','sc1_p':'Every project starts with the right questions: who is your customer, what do they need to feel, and what will make them choose you.',
+    'sc2_h':'Everything in one place','sc2_p':'Brand, content and website with the same vision. You manage one coherent result — not three vendors trying to align.',
+    'sc3_h':'Borderless standard','sc3_p':'Clients in Brazil and abroad. The delivery level is the same regardless of location — quality shouldn\'t depend on geography.',
+    'serv_eyebrow':'What we do','serv_h2':'Three services.<br>One standard.',
+    'serv_sub':'We choose to do less and do it very well. Every delivery gets full attention — from the brief to the final file.',
+    's1_h':'Visual Identity','s1_tag':'For brands that want to be remembered',
+    's1_p':'A well-crafted identity makes your customer think of you before searching online. We build brands with their own character — from the symbol to the full brand guide.',
+    's1_l1':'Logo and variations','s1_l2':'Brand identity manual','s1_l3':'Color palette and typography','s1_l4':'Applications and mockups','s1_cta':'Request a quote →',
+    's2_h':'Social Media Content','s2_tag':'For brands that can\'t look like amateurs',
+    's2_p':'An inconsistent feed turns clients away before any pitch. We create social media visuals that build recognition and drive people toward contact.',
+    's2_l1':'Strategic posts and stories','s2_l2':'Editable templates','s2_l3':'Feed identity','s2_l4':'Launch pieces','s2_cta':'Request a quote →',
+    's3_h':'Websites','s3_tag':'For brands that want results beyond the business card',
+    's3_p':'A website that just exists to have a URL doesn\'t work. We build pages that guide visitors to the contact button — without distractions.',
+    's3_l1':'High-conversion landing pages','s3_l2':'Institutional websites','s3_l3':'E-commerce','s3_l4':'Performance and SEO','s3_cta':'Request a quote →',
+    'port_eyebrow':'Portfolio','port_h2':'The work speaks<br>for itself.',
+    'port_link':'I want a project like this →',
+    'p1_cat':'Visual Identity','p1_h':'Firma Crossfit','p1_p':'A brand that communicates strength and discipline before any explanation.',
+    'p2_cat':'Visual Identity','p2_h':'Raw Rise','p2_p':'Identity for a cap manufacturer that competes visually with any international brand.',
+    'p3_cat':'App &amp; Branding','p3_h':'Kontrolei','p3_p':'From name to interface: a full management system for service providers built from scratch.',
+    'p4_cat':'Visual Identity','p4_h':'Armillab','p4_p':'Scientific credibility and natural appeal in the same identity — we delivered both.',
+    'pq_eyebrow':'Why work with me',
+    'pq_h2':'Six reasons to<br>trust the<br>process.',
+    'pq_sub':'Clear method, consistent execution, documented delivery. That\'s what separates a good project from one that actually works.',
+    'pq1_h':'Clarity before the first stroke','pq1_p':'No pixel is placed without intention. Before any execution, we understand what your brand needs to communicate — and to whom.',
+    'pq2_h':'Full control of the process','pq2_p':'From brief to delivery, everything goes through the same eye. No handoffs, no noise. You have one point of contact — and they\'re the one doing the work.',
+    'pq3_h':'Consistency that builds trust','pq3_p':'Brand, social and website with the same visual voice. When everything speaks the same language, your client recognizes you before reading a word.',
+    'pq4_h':'Decisions with reasoning','pq4_p':'Every color, shape and typography choice has a strategic reason. Design here is not opinion — it\'s argument.',
+    'pq5_h':'On time, every time','pq5_p':'What was agreed is what happens. No mid-project surprises, no excuses at delivery.',
+    'pq6_h':'You leave with full ownership','pq6_p':'Organized files, documented manual and usage guidance. The project ends — the knowledge stays with you.',
+    'proc_eyebrow':'How it works','proc_h2':'From the brief to<br>the final file.',
+    'proc_sub':'A straightforward process. No unnecessary meetings, no going back to square one.',
+    'pr1_h':'Initial conversation','pr1_p':'You tell me what your brand needs to do — not just how you want it to look. That detail defines everything that follows.',
+    'pr2_h':'Positioning','pr2_p':'We define where your brand fits in the market, who it speaks to and why that customer should choose you.',
+    'pr3_h':'Creation','pr3_p':'This is where the design happens. Every visual element built on what was defined before — no guesswork, all purpose.',
+    'pr4_h':'Fine-tuning','pr4_p':'You see it, give feedback, we refine. Two rounds of revision included — a solid brief means we rarely need both.',
+    'pr5_h':'Documented delivery','pr5_p':'Organized files, usage manual, application guidance. You leave knowing how to use everything you received.',
+    'fund_eyebrow':'The person behind it','fund_h2':'Wender Souza',
+    'fund_role':'Brand Designer &amp; Art Director',
+    'fund_p1':'I started with one conviction: most brands don\'t need a big agency — they need someone who understands business and executes well.',
+    'fund_p2':'Six years later, over 150 projects confirmed that bet was right. Every delivery gets the same level of attention as the first — regardless of client size.',
+    'fund_btn':'Talk to Wender →',
+    'fst1':'Projects','fst2':'Years','fst3':'Standards',
+    'depo_eyebrow':'Testimonials','depo_h2':'Who has worked<br>with me.',
+    'd1_q':'The identity delivered is something our clients comment on before they even walk in the door. It became part of our sales pitch.',
+    'd2_q':'Wender understood the product before starting. The result was a brand that competes visually with any international reference.',
+    'd3_q':'New website, bookings up 40% in the first month. Not a coincidence — it\'s how the site was built to work.',
+    'd4_q':'The difference was the process. Wender explains the reasoning behind every decision. You understand what you\'re getting — and you trust it.',
+    'd5_q':'I\'ve worked with bigger, more expensive agencies. Wender delivered better results with more attention. I\'m not switching.',
+    'd6_q':'Deadline met, files organized, zero rework. Sounds basic, but it\'s rare. It\'s the standard here.',
+    'faq_eyebrow':'FAQ','faq_h2':'Everything you want<br>to know before<br><em>starting.</em>',
+    'fq1_q':'What\'s the delivery timeline?','fq1_a':'Full visual identity: 10 to 20 business days. An extensive brand manual can take up to 30. The timeline is agreed before we start and honored until the end.',
+    'fq2_q':'How does the investment work?','fq2_a':'50% on contract signing, 50% on delivery. Larger projects can be split into up to 3 installments. I accept Pix, bank transfer and credit card.',
+    'fq3_q':'How many revisions are included?','fq3_a':'Two rounds in every project. In practice, the detailed brief we do beforehand means the first presentation is already very close to the final result.',
+    'fq4_q':'Will I receive all the editable files?','fq4_a':'Yes, everything: AI, PSD, PDF, PNG, JPG and SVG, organized by category. It\'s your brand — use it, adapt it and share it without needing permission.',
+    'fq5_q':'Do you work with international clients?','fq5_a':'Yes — Brazil and abroad. The entire process is 100% remote, with no loss of quality. I\'ve worked with clients in multiple countries with the same results.',
+    'fq6_q':'Do I need references before starting?','fq6_a':'No. Part of the process is discovering those references together. If you arrive with just the problem you want to solve, that\'s already enough to begin.',
+    'fq7_q':'What if I don\'t like the result?','fq7_a':'The two revision rounds exist exactly for that. But the detailed brief we do before ensures alignment before any delivery. Well-started projects rarely reach that point.',
+    'cta_eyebrow':'Next step',
+    'cta_h2':'Your brand deserves<br><em>to work for you.</em>',
+    'cta_btn1':'Talk to Wender →','cta_btn2':'View portfolio',
+    'foot_serv':'Services','foot_serv1':'Visual Identity','foot_serv2':'Social Media Content','foot_serv3':'Websites',
+    'foot_nav':'Navigation','foot_nav1':'About me','foot_nav2':'Portfolio','foot_nav3':'How it works','foot_nav4':'FAQ',
+    'foot_contact':'Contact',
+    'foot_desc':'Brand Designer &amp; Art Director.<br>Design with clarity. Results with consistency.',
+    'foot_copyright':'© 2026 Wender Souza',
+  }
+};
+
+let currentLang = 'pt-br';
+
+function applyLang(code) {
+  const t = LANGS[code];
+  if (!t) return;
+  currentLang = code;
+
+  // Apply all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // FAQ questions (button has data-i18n-q, answer has data-i18n)
+  document.querySelectorAll('[data-i18n-q]').forEach(el => {
+    const key = el.dataset.i18nQ;
+    if (t[key] !== undefined) {
+      // Keep the icon div, just update the text node
+      const icon = el.querySelector('.faq-icon');
+      el.innerHTML = t[key] + ' ';
+      if (icon) el.appendChild(icon);
+    }
+  });
+
+  // Update <html lang>
+  document.documentElement.lang = t.htmlLang;
+
+  // Update lang button display
+  document.getElementById('currentFlag').textContent = t.flag;
+  document.getElementById('currentLang').textContent = t.label;
+
+  // Update active states
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.lang === code);
+  });
+  document.querySelectorAll('.mobile-lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === code);
+  });
+
+  try { localStorage.setItem('ws_lang', code); } catch(e) {}
+}
+
+// Lang switcher toggle
+const langSwitcher = document.getElementById('langSwitcher');
+document.getElementById('langBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  langSwitcher.classList.toggle('open');
+});
+document.querySelectorAll('.lang-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    applyLang(opt.dataset.lang);
+    langSwitcher.classList.remove('open');
+  });
+});
+document.addEventListener('click', e => {
+  if (!langSwitcher.contains(e.target)) langSwitcher.classList.remove('open');
+});
+
+// Auto-detect or restore
+(function(){
+  try {
+    const saved = localStorage.getItem('ws_lang');
+    if (saved && LANGS[saved]) { applyLang(saved); return; }
+  } catch(e) {}
+  const br = navigator.language || '';
+  if (br.startsWith('en')) applyLang('en');
+  else if (br === 'pt-PT' || br.startsWith('pt-PT')) applyLang('pt-pt');
+  // default pt-br
+})()
+
 document.querySelectorAll('.faq-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const item=btn.parentElement;

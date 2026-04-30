@@ -259,35 +259,57 @@ body::before{
 
 /* ─── NAV ─── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:600;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 60px;height:64px;
-  border-bottom:1px solid transparent;
-  transition:background .35s,border-color .35s,backdrop-filter .35s;
+  position:fixed;top:24px;left:50%;z-index:600;
+  transform:translateX(-50%) translateY(0);
+  display:flex;align-items:center;justify-content:space-between;gap:40px;
+  padding:0 20px 0 28px;height:56px;
+  background:rgba(14,14,14,.8);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;
+  box-shadow:0 8px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.04) inset;
+  width:min(860px, calc(100vw - 48px));
+  white-space:nowrap;
+  opacity:1;
+  transition:
+    transform .5s cubic-bezier(.7,0,.3,1),
+    opacity .5s cubic-bezier(.7,0,.3,1),
+    background .3s ease,
+    box-shadow .3s ease,
+    border-color .3s ease;
+  will-change:transform,opacity;
 }
-nav.stuck{
-  background:rgba(9,9,9,.92);
-  backdrop-filter:blur(16px);
-  border-color:var(--line);
+nav.hidden{
+  transform:translateX(-50%) translateY(calc(-100% - 32px));
+  opacity:0;
+  pointer-events:none;
+}
+nav.peek{
+  transform:translateX(-50%) translateY(0);
+  opacity:1;
+  pointer-events:all;
 }
 .nav-logo{
-  font-size:16px;font-weight:700;letter-spacing:-.01em;color:var(--white);
+  font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--white);
+  flex-shrink:0;
 }
 .nav-logo em{font-style:normal;color:var(--g)}
-.nav-links{display:flex;gap:40px;align-items:center}
+.nav-links{display:flex;gap:2px;align-items:center}
 .nav-links a{
-  font-size:15px;font-weight:500;color:var(--body);
-  transition:color .2s;letter-spacing:-.01em;
+  font-size:14px;font-weight:500;color:var(--body);
+  transition:color .2s,background .2s;letter-spacing:-.01em;
+  padding:6px 16px;border-radius:100px;
 }
-.nav-links a:hover{color:var(--white)}
+.nav-links a:hover{color:var(--white);background:rgba(255,255,255,.07)}
 .nav-cta{
-  font-size:14px;font-weight:600;
+  font-size:13px;font-weight:600;
   background:var(--g);color:#000;
-  padding:9px 22px;border-radius:8px;border:none;cursor:pointer;
-  letter-spacing:-.01em;
-  transition:box-shadow .25s,opacity .2s;
+  padding:9px 22px;border-radius:100px;border:none;cursor:pointer;
+  letter-spacing:-.01em;flex-shrink:0;
+  transition:box-shadow .25s,transform .2s;
 }
-.nav-cta:hover{box-shadow:0 0 20px rgba(19,246,117,.35);opacity:.92}
+.nav-cta:hover{box-shadow:0 0 24px rgba(19,246,117,.45);transform:scale(1.03)}
 
 /* ─── HERO ─── */
 #hero{
@@ -295,7 +317,7 @@ nav.stuck{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:64px 60px 0;
+  padding:100px 60px 0;
   position:relative;overflow:hidden;
   background:var(--bg);
   text-align:center;
@@ -639,7 +661,7 @@ p.section-sub{
 .step-body p{font-size:15px;font-weight:400;color:var(--body);line-height:1.7}
 
 /* ─── FUNDADOR ─── */
-#fundador .inner{
+.fundador-inner{
   max-width:1200px;margin:0 auto;
   display:grid;grid-template-columns:1fr 1.15fr;gap:100px;align-items:center;
 }
@@ -796,11 +818,132 @@ footer{
 .wa:hover{transform:scale(1.08);box-shadow:0 6px 36px rgba(19,246,117,.5)}
 .wa svg{width:24px;height:24px;fill:#000}
 
-/* ─── REVEAL ─── */
-.rv{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+/* ─── MOTION DESIGN ─── */
+
+/* Base reveal — fade + slide up */
+.rv{
+  opacity:0;
+  transform:translateY(36px);
+  transition:
+    opacity .75s cubic-bezier(.22,1,.36,1),
+    transform .75s cubic-bezier(.22,1,.36,1);
+}
 .rv.on{opacity:1;transform:translateY(0)}
-.rv-l{opacity:0;transform:translateX(-24px);transition:opacity .65s ease,transform .65s ease}
+
+/* Slide from left */
+.rv-l{
+  opacity:0;
+  transform:translateX(-36px);
+  transition:
+    opacity .75s cubic-bezier(.22,1,.36,1),
+    transform .75s cubic-bezier(.22,1,.36,1);
+}
 .rv-l.on{opacity:1;transform:translateX(0)}
+
+/* Slide from right */
+.rv-r{
+  opacity:0;
+  transform:translateX(36px);
+  transition:
+    opacity .75s cubic-bezier(.22,1,.36,1),
+    transform .75s cubic-bezier(.22,1,.36,1);
+}
+.rv-r.on{opacity:1;transform:translateX(0)}
+
+/* Scale in */
+.rv-scale{
+  opacity:0;
+  transform:scale(.94);
+  transition:
+    opacity .7s cubic-bezier(.22,1,.36,1),
+    transform .7s cubic-bezier(.22,1,.36,1);
+}
+.rv-scale.on{opacity:1;transform:scale(1)}
+
+/* Cards hover — lift with shadow */
+.serv-card,.pq-card,.s-card,.d-card,.stat{
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    transform .35s cubic-bezier(.34,1.56,.64,1),
+    box-shadow .35s ease;
+}
+.serv-card:hover,.pq-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 48px rgba(0,0,0,.4);
+}
+.s-card:hover{
+  transform:translateX(8px);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+}
+.d-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.stat:hover{
+  transform:translateY(-3px);
+}
+
+/* Portfolio hover */
+.port-item{
+  transition:border-color .3s ease, transform .45s cubic-bezier(.34,1.56,.64,1);
+}
+.port-item:hover{
+  transform:translateY(-8px);
+  box-shadow:0 24px 56px rgba(0,0,0,.5);
+}
+
+/* Buttons spring */
+.btn-primary,.nav-cta,.btn-ghost{
+  transition:
+    box-shadow .25s ease,
+    transform .3s cubic-bezier(.34,1.56,.64,1),
+    opacity .2s ease,
+    border-color .2s ease,
+    color .2s ease;
+}
+.btn-primary:hover{
+  transform:scale(1.05) translateY(-1px);
+}
+.btn-ghost:hover{
+  transform:scale(1.03) translateY(-1px);
+}
+
+/* FAQ icon spring */
+.faq-icon{
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .25s,border-color .25s;
+}
+
+/* Step rows */
+.step-row{
+  transition:opacity .5s cubic-bezier(.22,1,.36,1), transform .5s cubic-bezier(.22,1,.36,1);
+}
+.step-row:not(.lit):not(:hover){
+  transform:translateX(-8px);
+}
+.step-row.lit,.step-row:hover{
+  transform:translateX(0);
+}
+
+/* Serv card bottom line */
+.serv-card::after{
+  transition:transform .4s cubic-bezier(.7,0,.3,1);
+}
+
+/* Port item side line */
+.port-item::after{
+  transition:transform .4s cubic-bezier(.7,0,.3,1);
+}
+
+/* Section eyebrow line */
+.eyebrow::before{
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+
+/* Marquee pause on hover — already done */
+
+/* Smooth scroll for entire page */
+html{scroll-behavior:smooth}
 
 /* ─── HAMBURGER BUTTON ─── */
 .nav-hamburger{
@@ -830,6 +973,17 @@ footer{
   transition:opacity .35s ease;
 }
 .mobile-menu.open{opacity:1;pointer-events:all}
+.mobile-menu-close{
+  position:absolute;top:20px;right:20px;
+  width:44px;height:44px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;
+}
+.mobile-menu-close:hover{background:rgba(19,246,117,.12);border-color:rgba(19,246,117,.3)}
+.mobile-menu-close svg{width:18px;height:18px;stroke:#fff;stroke-width:2;fill:none}
 .mobile-menu a{
   font-size:clamp(32px,8vw,52px);font-weight:700;
   letter-spacing:-.025em;color:var(--white);
@@ -858,7 +1012,17 @@ footer{
 /* ─── RESPONSIVE 1024px ─── */
 @media(max-width:1024px){
   /* nav */
-  nav{padding:0 24px}
+  nav{
+    top:0;left:0;right:0;
+    transform:none !important;
+    opacity:1 !important;
+    pointer-events:all !important;
+    width:100%;min-width:unset;max-width:unset;
+    border-radius:0;padding:0 20px;height:60px;
+    border:none;border-bottom:1px solid rgba(255,255,255,.08);
+    background:rgba(9,9,9,.96);
+    box-shadow:none;
+  }
   .nav-links{display:none}
   .nav-cta{display:none}
   .nav-hamburger{display:flex}
@@ -896,9 +1060,9 @@ footer{
   .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}
 
   /* fundador */
-  #fundador .inner{grid-template-columns:1fr;gap:48px}
-  .f-img{aspect-ratio:1/1;min-height:unset}
-  .f-badge{right:8px}
+  .fundador-inner{grid-template-columns:1fr !important;gap:40px}
+  .f-img{aspect-ratio:4/5;min-height:unset}
+  .f-img-wrap{max-width:480px;margin:0 auto;width:100%}
 
   /* footer */
   .foot-grid{grid-template-columns:1fr 1fr;gap:40px}
@@ -935,10 +1099,14 @@ footer{
   .step-row{grid-template-columns:40px 1fr;gap:20px;padding:28px 0}
 
   /* fundador */
+  .fundador-inner{gap:32px;grid-template-columns:1fr !important}
+  .f-img-wrap{max-width:100%}
   .f-img{aspect-ratio:4/5}
   .f-stats{grid-template-columns:repeat(3,1fr)}
   .f-stats .f-stat{padding:16px 12px}
   .f-stats .fn{font-size:22px}
+  .f-role{font-size:12px}
+  #fundador .btn-primary{width:100%;justify-content:center}
 
   /* depo */
   .d-card{width:280px;padding:24px}
@@ -952,8 +1120,13 @@ footer{
   #cta .btn-primary,#cta .btn-ghost{width:100%;justify-content:center}
 
   /* footer */
-  .foot-grid{grid-template-columns:1fr;gap:32px}
-  .foot-bottom{flex-direction:column;gap:8px;text-align:center}
+  .foot-grid{grid-template-columns:1fr;gap:0}
+  .foot-brand{padding-bottom:32px}
+  .foot-col{border-top:1px solid var(--line);padding-top:28px;padding-bottom:28px}
+  .foot-bottom{flex-direction:column;gap:6px;text-align:center;padding-top:24px}
+  .foot-brand p{max-width:100%}
+  footer{padding:56px 20px 32px}
+  .foot-brand p{font-size:13px}
 
   /* nav mobile */
   nav{padding:0 20px}
@@ -982,6 +1155,9 @@ footer{
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+  <button class="mobile-menu-close" id="menu-close" aria-label="Fechar menu">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
   <a href="#servicos">Serviços</a>
   <a href="#portfolio">Portfólio</a>
   <a href="#sobre">Sobre</a>
@@ -1223,7 +1399,7 @@ footer{
 
 <!-- FUNDADOR -->
 <section id="fundador" class="section section-border">
-  <div class="inner" style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:100px;align-items:center">
+  <div class="fundador-inner">
     <div class="f-img-wrap rv-l">
       <div class="f-img" style="font-size:0">
         <img src="https://i.imgur.com/BsSWMS0.jpeg" alt="Wender Souza, Brand Designer e Art Director" loading="lazy" width="600" height="800" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"/>
@@ -1328,7 +1504,7 @@ footer{
   <div class="foot-grid">
     <div class="foot-brand">
       <span class="logo nav-logo">Wender Souza<em>.</em></span>
-      <p>Brand Designer &amp; Art Director Brand &amp; Design.<br>Design com clareza. Resultado com consistência.</p>
+      <p>Brand Designer &amp; Art Director.<br>Design com clareza. Resultado com consistência.</p>
     </div>
     <div class="foot-col"><h4>Serviços</h4><ul><li><a href="#servicos">Identidade Visual</a></li><li><a href="#servicos">Conteúdo para Redes</a></li><li><a href="#servicos">Sites</a></li></ul></div>
     <div class="foot-col"><h4>Navegação</h4><ul><li><a href="#sobre">Sobre mim</a></li><li><a href="#portfolio">Portfólio</a></li><li><a href="#processo">Como funciona</a></li><li><a href="#faq">Dúvidas</a></li></ul></div>
@@ -1520,10 +1696,37 @@ footer{
   loop();
 })();
 
-/* ══ NAV ══ */
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('stuck',scrollY>48);
-},{ passive:true });
+/* ══ NAV — hide on scroll down, show on scroll up ══ */
+(function(){
+  const nav = document.getElementById('nav');
+  let lastY = 0;
+  let ticking = false;
+  const THRESHOLD = 80; // px scrolled before hiding
+
+  window.addEventListener('scroll', () => {
+    if(!ticking){
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if(y < THRESHOLD){
+          // Near top — always show
+          nav.classList.remove('hidden');
+          nav.classList.add('peek');
+        } else if(y > lastY + 8){
+          // Scrolling DOWN — hide
+          nav.classList.add('hidden');
+          nav.classList.remove('peek');
+        } else if(y < lastY - 8){
+          // Scrolling UP — show
+          nav.classList.remove('hidden');
+          nav.classList.add('peek');
+        }
+        lastY = y;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+})();
 
 /* ══ HAMBURGER MENU ══ */
 const hamburger = document.getElementById('hamburger');
@@ -1545,6 +1748,9 @@ hamburger.addEventListener('click', () => {
 mobileMenu.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => toggleMenu(false));
 });
+
+// Close button inside menu
+document.getElementById('menu-close').addEventListener('click', () => toggleMenu(false));
 
 // Close on ESC
 document.addEventListener('keydown', e => {
@@ -1573,21 +1779,37 @@ if(fc) new IntersectionObserver(ens=>{
   ens.forEach(e=>{if(e.isIntersecting&&!counted){counted=true;document.querySelectorAll('[data-count]').forEach(runCount)}});
 },{threshold:.5}).observe(fc);
 
-/* ══ REVEAL ══ */
-new IntersectionObserver(ens=>{
-  ens.forEach(e=>{if(e.isIntersecting) e.target.classList.add('on')});
-},{threshold:.08}).observe(document.body);
+/* ══ REVEAL — upgraded ══ */
+const rvObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      rvObs.unobserve(e.target); // fire once
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-const rvObs=new IntersectionObserver(ens=>{
-  ens.forEach(e=>{if(e.isIntersecting) e.target.classList.add('on')});
-},{threshold:.08});
-document.querySelectorAll('.rv,.rv-l').forEach(el=>rvObs.observe(el));
+document.querySelectorAll('.rv,.rv-l,.rv-r,.rv-scale').forEach(el => rvObs.observe(el));
+
+/* Auto-stagger children inside grids */
+document.querySelectorAll('.serv-grid,.pq-grid,.port-grid,.stats-row,.sobre-cards,.steps').forEach(grid => {
+  Array.from(grid.children).forEach((child, i) => {
+    if(!child.classList.contains('rv') && !child.classList.contains('rv-l')){
+      child.classList.add('rv');
+    }
+    // Stack delay
+    const existing = parseFloat(child.style.transitionDelay) || 0;
+    if(existing === 0) child.style.transitionDelay = `${i * 0.08}s`;
+  });
+  rvObs.observe(grid); // not needed but ensure children get observed
+  Array.from(grid.children).forEach(child => rvObs.observe(child));
+});
 
 /* step rows */
-const stObs=new IntersectionObserver(ens=>{
-  ens.forEach(e=>{if(e.isIntersecting) e.target.classList.add('lit')});
-},{threshold:.35});
-document.querySelectorAll('.step-row').forEach(el=>stObs.observe(el));
+const stObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('lit'); });
+}, { threshold: 0.3 });
+document.querySelectorAll('.step-row').forEach(el => stObs.observe(el));
 
 /* ══ FAQ ══ */
 document.querySelectorAll('.faq-btn').forEach(btn=>{
